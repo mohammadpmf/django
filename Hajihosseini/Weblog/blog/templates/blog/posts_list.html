@@ -9,7 +9,7 @@ All Posts
 <div class="card shadow-sm my-3">
     <div class="card-body">
         <h4 class="card-title">{{ post.title }}</h4>
-        <p class="card-text py-3">{{ post.text }}</p>
+        <p class="card-text py-3">{{ post.text|truncatechars:150 }}</p>
         <p class="card-subtitle mb-2 text-muted small">last edited: {{ post.datetime_modified }}</p>
         <a href="{% url 'post_detail' post.pk %}" class="btn btn-sm btn-outline-success p-2 mt-2">Read More</a>
     </div>

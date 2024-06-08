@@ -10,6 +10,8 @@ Detail of post {{ post.title }}
     <p class="small text-muted mt-2">By: {{ post.author.first_name }} {{ post.author.last_name }} </p>
     <p class="mt-2">{{ post.text }}</p>
     <p class="mt-2">💙{{ post.likes }}</p>
+    <p class="card-subtitle mb-2 text-muted small">created at: {{ post.datetime_created|date:'D d M Y H:m:s' }}</p>
+    <p class="card-subtitle mb-2 text-muted small">last edited: {{ post.datetime_modified|date:'D d M Y H:m:s' }}</p>
 </div>
 
 <div class="card shadow my-3 p-5">
