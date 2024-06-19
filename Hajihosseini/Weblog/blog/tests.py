@@ -80,3 +80,65 @@ class BlogPostTest(TestCase):
         response = self.client.get(reverse('posts_list'))
         self.assertContains(response, self.post1.title)
         self.assertNotContains(response, self.post2.title)
+
+    def test_post_model_str(self):
+        self.assertIn(self.post1.title, str(self.post1))
+
+    def test_post_delete_view_render_if_method_is_get(self):
+        response = self.client.get(reverse('post_delete', args=[self.post1.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Yes')
+        self.assertContains(response, f'No. Back to post {self.post1.title}')
+
+    def test_post_delete_view_get_404_if_not_exists(self):
+        response = self.client.post(reverse('post_delete', args=[1000]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_post_delete_view_redirect_after_delete(self):
+        response = self.client.post(reverse('post_delete', args=[self.post1.pk]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_create_view_render_if_method_is_get(self):
+        response = self.client.get(reverse('post_create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_create_view_if_everything_is_ok(self):
+        response = self.client.post(reverse('post_create'), {
+            'title': 'New Post',
+            'text': 'New text',
+            'author': self.user1.id,
+            'status': BlogPost.STATUS_CHOICES[0][0],
+            'likes': 0,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(BlogPost.objects.last().title, 'New Post')
+        self.assertEqual(BlogPost.objects.last().text, 'New text')
+    
+    def test_post_update_view_render_if_method_is_get(self):
+        response = self.client.get(reverse('post_update', args=[self.post1.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.post1.title)
+        self.assertContains(response, self.post1.text)
+        self.assertContains(response, self.post1.author)
+        self.assertContains(response, self.post1.status)
+        self.assertContains(response, self.post1.likes)
+
+    def test_post_update_view_get_404_if_not_exists(self):
+        response = self.client.post(reverse('post_update', args=[1000]), {
+            'title': 'Post 1 Updated!',
+            'text': 'Text 1 Updated!',
+            'author': self.post1.author.pk,
+            'status': self.post1.status,
+            'likes': self.post1.likes,
+        })
+        self.assertEqual(response.status_code, 404)
+
+    def test_post_update_view_confirm_if_method_is_post_and_everything_is_ok(self):
+        response = self.client.post(reverse('post_update', args=[self.post1.pk]), {
+            'title': 'Post 1 Updated!',
+            'text': 'Text 1 Updated!',
+            'author': self.post1.author.pk,
+            'status': self.post1.status,
+            'likes': self.post1.likes
+        })
+        self.assertEqual(response.status_code, 302)
