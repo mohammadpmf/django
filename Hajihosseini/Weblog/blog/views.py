@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.shortcuts import get_object_or_404
-from .models import BlogPost
 from django.contrib.auth import get_user_model
+
+from .models import BlogPost
+from .forms import BlogPostForm
 
 
 def post_list_view(request):
@@ -21,15 +23,11 @@ def post_detail_view(request, pk):
 
 def post_create_view(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        text = request.POST.get('text')
-        BlogPost.objects.create(
-            title = title,
-            text = text,
-            author = get_user_model().objects.last(),
-            status = 'p',
-        )
-        return redirect('posts_list')
+        form = BlogPostForm(request.POST)
+        if form.is_valid():
+            form = form.save()
+            return redirect('post_detail', form.pk)
     else:
-        print('get')
-    return render(request, 'blog/post_create.html')
+        form = BlogPostForm()
+    context = {'form': form}
+    return render(request, 'blog/post_create.html', context)
