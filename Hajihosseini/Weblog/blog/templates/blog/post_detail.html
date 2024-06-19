@@ -14,7 +14,7 @@ Detail of post {{ post.title }}
     <p class="card-subtitle mb-2 text-muted small">last edited: {{ post.datetime_modified|date:'D d M Y H:m:s' }}</p>
     <div>
         <a href="{% url 'post_update' post.pk %}" class="btn btn-sm btn-outline-warning p-2 mt-2">Update</a>
-        {% comment %} <a href="{% url 'post_delete' post.pk %}" class="btn btn-sm btn-outline-danger p-2 mt-2">Delete</a> {% endcomment %}
+        <a href="{% url 'post_delete' post.pk %}" class="btn btn-sm btn-outline-danger p-2 mt-2">Delete</a>
     </div>
 </div>
 

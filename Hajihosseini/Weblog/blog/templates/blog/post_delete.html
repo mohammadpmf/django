@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+
+{% block title %}
+حذف پست {{ post.title }}
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow my-3 p-5">
+    <h3>Delete Post {{ post.title }}</h3>
+        <form method="POST">
+            {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger px-4 py-2 m-3">Yes</button>
+        <a href="{% url 'post_detail' post.pk %}" class="btn btn-outline-success px-4 py-2">No. Back to post {{ post.title }}</a>
+    </form>
+</div>
+{% endblock content %}
