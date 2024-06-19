@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+
 
 class BlogPost(models.Model):
     STATUS_CHOICES = (
@@ -16,3 +18,7 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return f"{self.title} written by {self.author.first_name} {self.author.last_name}"
+    
+    def get_absolute_url(self):
+        return reverse("post_detail", kwargs={"pk": self.pk})
+    
