@@ -12,6 +12,10 @@ Detail of post {{ post.title }}
     <p class="mt-2">💙{{ post.likes }}</p>
     <p class="card-subtitle mb-2 text-muted small">created at: {{ post.datetime_created|date:'D d M Y H:m:s' }}</p>
     <p class="card-subtitle mb-2 text-muted small">last edited: {{ post.datetime_modified|date:'D d M Y H:m:s' }}</p>
+    <div>
+        <a href="{% url 'post_update' post.pk %}" class="btn btn-sm btn-outline-warning p-2 mt-2">Update</a>
+        {% comment %} <a href="{% url 'post_delete' post.pk %}" class="btn btn-sm btn-outline-danger p-2 mt-2">Delete</a> {% endcomment %}
+    </div>
 </div>
 
 <div class="card shadow my-3 p-5">
