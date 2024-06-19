@@ -32,7 +32,7 @@ class PostDetailView(generic.DetailView):
     # blogpost
 
 class PostCreateView(generic.CreateView):
-    # form_class = BlogPostForm
+    form_class = BlogPostForm
     template_name = 'blog/post_create.html'
     # اگه گت ابسلوت یو آر ال تعریف کرده باشیم، ساکسس یو آر لازم نیست میره همونجا.
     # اما اگه نوشته باشیم و دلمون نخواد بره اونجا میتونیم از ساکسس یو آر ال استفاده کنیم.
@@ -44,37 +44,22 @@ class PostCreateView(generic.CreateView):
     # model = BlogPost
     # fields = ['title', 'text', 'author', 'status']
     
-# def post_create_view(request):
-#     if request.method == 'POST':
-#         form = BlogPostForm(request.POST)
-#         if form.is_valid():
-#             form = form.save()
-#             return redirect('post_detail', form.pk)
-#     else:
-#         form = BlogPostForm()
-#     context = {'form': form}
-#     return render(request, , context)
+class PostUpdateView(generic.UpdateView):
+    model = BlogPost
+    # اینجا مدل اجباری هست و باید بنویسیم. تو کریت ویو میتونستیم مدل رو ننویسیم و چون میخواست
+    # فرم کلس رو بخوونه، تو کلاس متا نوشته بودیم که مدلش بلاگ پست هست و اونجا مشکلی نداشت.
+    # چون همون لحظه میساخت. اما اینجا فرق داره. اینجا ما میخوایم اول بریم جزییات یک پست
+    # رو بگیریم و اطلاعاتش رو میخواد از دیتابیس بپرسه. پس قبل از این که ما تغییرش بدیم میخواد
+    # یک سری اطلاعات از چیزی به ما نشون بده. از چه چیزی؟؟ آهاااا. اینجاست که لازمه ما بهش بگیم
+    # که مدل چی هست. چون اول میره از دیتابیس میگیرتش که اطلاعات رو به ما نشون بده. وقتی که ما
+    # تغییرش میخوایم بدیم اونجا تازه میره سراغ فرم کلس که خب دیگه بهش گفتیم مدلش چی بوده.
+    # به هر حال. چون آپدیت ترکیب سلکت و اینزرت هست، پس به همه اطلاعات اونها نیاز داره.
+    form_class = BlogPostForm
+    template_name = 'blog/post_create.html'
 
 
-def post_update_view(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-    form = BlogPostForm(request.POST or None, instance=post)
-    if form.is_valid():
-        form = form.save()
-        return redirect('post_detail', form.pk)
-    # if request.method == 'POST':
-    #     form = BlogPostForm(request.POST, instance=post)
-    #     if form.is_valid():
-    #         form = form.save()
-    #         return redirect('post_detail', form.pk)
-    # else:
-    #     form = BlogPostForm(instance=post)
-    return render(request, 'blog/post_create.html', context={'form': form})
-
-
-def post_delete_view(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-    if request.method=='POST':
-        post.delete()
-        return redirect('posts_list')
-    return render(request, 'blog/post_delete.html', context={'post': post})
+class PostDeleteView(generic.DeleteView):
+    model = BlogPost
+    template_name = 'blog/post_delete.html'
+    context_object_name = 'post'
+    success_url = reverse_lazy('posts_list')
