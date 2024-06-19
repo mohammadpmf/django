@@ -1,25 +1,34 @@
 from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.views import generic
 
 from .models import BlogPost
 from .forms import BlogPostForm
 
 
-def post_list_view(request):
-    posts = BlogPost.objects.filter(status='p').order_by('-datetime_modified')
-    context = {
-        'posts': posts,
-    }
-    return render(request, 'blog/posts_list.html', context=context)
+class PostListView(generic.ListView):
+    # model = BlogPost # اگه کوئری ست بنویسیم دیگه مدل تو خودش معلوم هست. ننویسیم هم اشکال نداره. بنویسیم هم که بهتره. فقط کامنت کردم که تست کنم.
+    queryset = BlogPost.objects.filter(status='p').order_by('-datetime_modified')
+    template_name = 'blog/posts_list.html'
+    # اگه متغیر تمپلیت نیم رو نذاریم، خود جنگو اسم مدل رو حروف کوچیک میکنه تهش یه آندرلاین میذاره و کلمه
+    # لیست رو بهش میچسبونه. یعنی اگه مشخص نکنم که تمپلیت نیم چی هست، جنگو اینجا دنبال این میگرده
+    # blog/blogpost_list.html
+    context_object_name = 'posts'
+    # اگه متغیر کانتکست آبجکت نیم رو نذاریم، خود جنگو اسم مدل رو حروف کوچیک میکنه. تهش یه آندرلاین میذاره
+    # و بعد هم کلمه لیست رو میذاره. یعنی اینجا میشه
+    # blogpost_list
 
 
-def post_detail_view(request, pk):
-    post = get_object_or_404(BlogPost, pk=pk)
-    context = {
-        'post': post,
-    }
-    return render(request, 'blog/post_detail.html', context=context)
+class PostDetailView(generic.DetailView):
+    model = BlogPost
+    template_name = 'blog/post_detail.html'
+    # اگه متغیر تمپلیت نیم رو نذاریم، خود جنگو اسم مدل رو حروف کوچیک میکنه تهش یه آندرلاین میذاره و کلمه
+    # دیتیل رو بهش میچسبونه. یعنی اگه مشخص نکنم که تمپلیت نیم چی هست، جنگو اینجا دنبال این میگرده
+    # blog/blogpost_detail.html
+    context_object_name = 'post'
+    # اگه متغیر کانتکست آبجکت نیم رو نذاریم، خود جنگو اسم مدل رو حروف کوچیک میکنه. یعنی اینجا میشه
+    # blogpost
 
 
 def post_create_view(request):
