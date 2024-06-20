@@ -1,10 +1,11 @@
+from django.http import HttpRequest
 from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.views import generic
 from django.urls import reverse_lazy
 
-from .models import BlogPost
+from .models import BlogPost, Comment
 from .forms import BlogPostForm
 
 
@@ -30,6 +31,33 @@ class PostDetailView(generic.DetailView):
     context_object_name = 'post'
     # اگه متغیر کانتکست آبجکت نیم رو نذاریم، خود جنگو اسم مدل رو حروف کوچیک میکنه. یعنی اینجا میشه
     # blogpost
+    
+    def get_context_data(self,*args, **kwargs):
+        blogpost=kwargs.get('object')
+        context={
+            'post': BlogPost.objects.get(pk=blogpost.pk),
+            'comments': Comment.objects.filter(is_confirmed=True, blogpost=blogpost.pk).order_by('-datetime_created')
+            }
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        pk=kwargs.get('pk')
+        commentor = request.POST.get('commentor')
+        email = request.POST.get('email')
+        text = request.POST.get('text')
+        blogpost = BlogPost.objects.get(pk=pk)
+        error = ""
+        if text!="":
+            Comment.objects.create(blogpost=blogpost, commentor=commentor, email=email, text=text)
+        else:
+            error = "متن نمیتواند خالی باشد."
+        context={
+            'post': blogpost,
+            'comments': Comment.objects.filter(is_confirmed=True, blogpost=pk).order_by('-datetime_created'),
+            'error': error,
+            }
+        return render(request, 'blog/post_detail.html', context=context)
+
 
 class PostCreateView(generic.CreateView):
     form_class = BlogPostForm

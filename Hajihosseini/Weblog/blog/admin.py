@@ -6,7 +6,7 @@ from .models import BlogPost, Comment
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'status', 'author', 'likes', 'datetime_modified']
-    list_display_links = ['author', 'likes', 'datetime_modified']
+    list_display_links = ['title', 'author', 'likes', 'datetime_modified']
     list_editable = ['status']
     ordering = ['-status', '-likes', 'id']
 
