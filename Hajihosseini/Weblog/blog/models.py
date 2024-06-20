@@ -22,3 +22,16 @@ class BlogPost(models.Model):
     def get_absolute_url(self):
         return reverse("post_detail", kwargs={"pk": self.pk})
     
+
+class Comment(models.Model):
+    blogpost = models.ForeignKey(to=BlogPost, on_delete=models.CASCADE, related_name='comments', verbose_name='پست مربوطه در وبلاگ')
+    commentor = models.CharField(max_length=256, blank=True, verbose_name='نام کامنت گذار')
+    email = models.EmailField(blank=True, verbose_name='آدرس ایمیل کامنت گذار')
+    text = models.TextField(verbose_name='متن کامنت')
+    is_confirmed = models.BooleanField(default=False, verbose_name='وضعیت تایید کامنت')
+    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ارسال کامنت')
+
+    def __str__(self):
+        if self.commentor.strip()!=0:
+            return f"{self.commentor}: {self.text[:60]}"
+        return f"Ananymous User: {self.text[:60]}"

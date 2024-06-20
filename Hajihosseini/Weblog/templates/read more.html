@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}
+مطالعه بیشتر
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow my-3 p-5">
+    <p style="text-align: justify;">
+        This is the first project of MohammadHadi Hajihosseini Django course
+        And I've done it successfully. I've added some parts to it. I've added likes to every post.
+        And I've implemented comments part and I've used static files. I want to deploy this version somewhere😊
+    </p>
+    <p>
+        Good Luck. Mohammad Pourmohammadi Fallah
+    </p>
+    <a href="https://www.aparat.com/mohammadpmf" target="_blank"><img class='aparat' src="{% static 'images/aparat_logo.png' %}" alt="لوگو آپارات"></a>
+</div>
+{% endblock content %}

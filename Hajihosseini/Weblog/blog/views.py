@@ -63,3 +63,6 @@ class PostDeleteView(generic.DeleteView):
     template_name = 'blog/post_delete.html'
     context_object_name = 'post'
     success_url = reverse_lazy('posts_list')
+
+class ReadMoreView(generic.TemplateView):
+    template_name = 'read more.html'

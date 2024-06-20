@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BlogPost
+from .models import BlogPost, Comment
 
 
 # مدل دوم با استفاده از دکوریتور
@@ -13,3 +13,10 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 # مدل اول 
 # admin.site.register(BlogPost, BlogPostAdmin)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'blogpost', 'commentor', 'email', 'is_confirmed']
+    list_display_links = ['id', 'blogpost', 'commentor', 'email']
+    list_editable = ['is_confirmed']

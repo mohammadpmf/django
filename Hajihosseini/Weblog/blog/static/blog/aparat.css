@@ -1,0 +1,13 @@
+.aparat{
+    width: 36px;
+    height: 36px;
+    filter: grayscale(100%);
+    transition-duration: 500ms;
+    rotate: 0deg;
+}
+
+.aparat:hover{
+    filter: grayscale(0%);
+    animation: rotation;
+    rotate: 165deg;
+}
