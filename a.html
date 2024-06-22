@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .aparat{
+            width: 36px;
+            height: 36px;
+            filter: grayscale(100%);
+            transition-duration: 500ms;
+            rotate: 0deg;
+        }
+
+        .aparat:hover{
+            filter: grayscale(0%);
+            animation: rotation;
+            rotate: 165deg;
+        }
+    </style>
+</head>
+<body dir="rtl" style="background-color: skyblue;">
+<h1>
+    سلام {{ user.username }}،
+</h1>
+<p>
+    شخصی (احتمالا خودتان) برای ریست کردن رمز عبور این آدرس ایمیل درخواست دادید
+</p>
+<p>
+    نام دامنه: {{ domain }}
+</p>
+<p>
+    آدرس ایمیل: {{ user.email }}
+</p>
+<p>
+    در صورتی که شما درخواست نداده اید، این ایمیل را نادیده بگیرید، در غیر این صورت، جهت بازیابی رمز عبور روی لینک زیر کلیک کنید
+</p>
+<a href="{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}">بازیابی رمز عبور</a>
+
+<p>
+    اگر نام کاربری خود را فراموش کرده اید، اینه 😊
+    {{ user.username }}
+</p>
+<p>
+    اگر پسورد قبلیتان را فراموش کرده اید، خود ما هم آن را نداریم. فقط میتونیم بگیم هش شده اش اینه 😂
+    {{ user.password }}
+</p>
+<p>
+    😂اگر نام خود را فراموش کرده اید، اینه:
+    {{ user.first_name }} {{ user.last_name }}
+</p>
+<p>
+    با تشکر از شما جهت استفاده از سایت ما.
+    موفق باشید.
+</p>
+<a href="https://www.aparat.com/static/img/branding/img1.png" target="_blank"><img class='aparat' src="{% static 'images/aparat_logo.png' %}" alt="لوگو آپارات"></a>
+</body>
+</html>
