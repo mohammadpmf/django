@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+
+{% block title %}
+ورود
+{% endblock title %}
+
+{% block links %}
+{% endblock links %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="ورود">
+</form>
+{% endblock content %}

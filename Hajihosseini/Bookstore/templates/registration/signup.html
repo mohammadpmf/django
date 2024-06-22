@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+
+{% block title %}
+ثبت نام
+{% endblock title %}
+
+{% block links %}
+{% endblock links %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="ثبت نام">
+</form>
+{% endblock content %}

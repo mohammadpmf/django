@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+
+
+{% block title %}
+خانه
+{% endblock title %}
+
+{% block links %}
+{% endblock links %}
+
+{% block content %}
+<h1>خانه</h1>
+{% if user.is_authenticated %}
+<p>
+    Welcome {{ user }}
+    |
+    <form action="{% url 'logout' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="خروج">
+    </form>
+</p>
+{% else %}
+<p>
+<a href="{% url 'login' %}">
+    ورود
+</a>
+|
+<a href="{% url 'signup' %}">
+    ثبت نام
+</a>
+</p>
+{% endif %}
+{% endblock content %}
