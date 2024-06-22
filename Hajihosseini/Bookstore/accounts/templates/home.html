@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 
+{% load crispy_forms_tags %}
 
 {% block title %}
 خانه
@@ -9,24 +10,25 @@
 {% endblock links %}
 
 {% block content %}
-<h1>خانه</h1>
+<h1 class='mb-5'>خانه</h1>
 {% if user.is_authenticated %}
-<p>
-    Welcome {{ user }}
-    |
+<h2>
+    <p>
+        Welcome {{ user }}
+    </p>
     <form action="{% url 'logout' %}" method="POST">
         {% csrf_token %}
-        <input type="submit" value="خروج">
+        <input type="submit" class="btn btn-danger px-4 pb-3 pt-2" value="خروج">
     </form>
-</p>
+</h2>
 {% else %}
 <p>
-<a href="{% url 'login' %}">
-    ورود
+<a href="{% url 'login' %}" class="btn btn-success px-3 pb-2">
+    برو به صفحه وارد شدن
 </a>
-|
-<a href="{% url 'signup' %}">
-    ثبت نام
+<span class="px-2"></span>
+<a href="{% url 'signup' %}" class="btn btn-primary px-3 pb-2">
+    برو به صفحه ثبت نام
 </a>
 </p>
 {% endif %}

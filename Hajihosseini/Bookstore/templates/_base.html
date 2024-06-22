@@ -6,9 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
     {% block links %}{% endblock links %}
 </head>
-<body>
+<body dir="rtl">
+    <div class='container card shadow mt-5 p-5'>
     {% block content %}{% endblock content %}
+    </div>
+    <script src="{% static 'bootstrap/bootstrap.min.js' %}"></script>
 </body>
 </html>

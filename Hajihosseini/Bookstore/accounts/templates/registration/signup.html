@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 
+{% load crispy_forms_tags %}
 
 {% block title %}
 ثبت نام
@@ -11,7 +12,13 @@
 {% block content %}
 <form action="" method="post">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="ثبت نام">
+    {{form|crispy}}
+    <p>
+        <input type="submit" class="btn btn-outline-primary px-3 pb-2" value="ثبت نام">
+    </p>
+    <p>
+        <a class="btn btn-success px-3 pb-2" href="{% url 'login' %}">برو به صفحه ورود</a>
+        <a class="btn btn-secondary px-3 pb-2" href="{% url 'home' %}">بازگشت به خانه</a>
+    </p>
 </form>
 {% endblock content %}
