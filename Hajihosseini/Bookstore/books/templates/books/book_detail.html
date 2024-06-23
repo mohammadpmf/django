@@ -12,4 +12,9 @@
     {{ book.title }}
     {{ book.price }}
     {{ book.author }}
+    <div>
+        <a href="{% url 'book_update' book.pk %}" class='btn btn-outline-primary px-3 py-2 m-2'>ویرایش کتاب</a>
+        <a href="{% url 'book_delete' book.pk %}" class='btn btn-outline-danger px-3 py-2 m-2'>حذف کتاب</a>
+        <a href="{% url 'books' %}" class='btn btn-outline-secondary px-3 py-2 m-2'>بازگشت به لیست کتاب ها</a>
+    </div>
 {% endblock content %}

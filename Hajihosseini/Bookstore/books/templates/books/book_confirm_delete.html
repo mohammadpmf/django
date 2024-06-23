@@ -12,8 +12,13 @@
 
 {% block content %}
 <form method='post'>
+    <h1>
+        آیا از حذف کتاب {{ book.title }} مطمئنید؟
+    </h1>
     {% csrf_token %}
     {{ form|crispy }}
-    <input type='submit' class='btn btn-outline-danger px-3 py-2 m-2' value="حذف کتاب {{ book.title }}">
+    <input type='submit' class='btn btn-outline-danger px-3 py-2 m-2' value="بله حذف کن">
+    <a href="{{book.get_absolute_url}}" class='btn btn-outline-primary px-3 py-2 m-2'>خیر. به جزییات کتاب برگرد</a>
+    <a href="{% url 'books' %}" class='btn btn-outline-secondary px-3 py-2 m-2'>بازگشت به لیست کتاب ها</a>
 </form>
 {% endblock content %}
