@@ -90,6 +90,8 @@
 <div>
 </div>
 {% if message %}
-<script>alert("{{ message|linebreaksbr }}");</script>
+<script>alert("{{ message }}");</script>
+{% elif error %}
+<script>alert("{{ error }}");</script>
 {% endif %}
 {% endblock content %}

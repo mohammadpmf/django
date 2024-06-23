@@ -21,14 +21,33 @@ class BookDetailView(generic.DetailView):
     
     def get_context_data(self,*args, **kwargs):
         book=kwargs.get('object')
+        comment_form = CommentForm()
         context={
             'book': book,
-            'comments': Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
+            'comments': Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified'),
+            'comment_form': comment_form,
             }
         return context
     
-    def post():
-        pass
+    def post(self, request, *args, **kwargs):
+        pk=kwargs.get('pk')
+        text = request.POST.get('text')
+        book = get_object_or_404(Book, pk=pk)
+        error = ""
+        message = None
+        if text!="":
+            Comment.objects.create(text=text, book=book, user=request.user)
+            message = f"نظر {text} از طرف {request.user} برای کتاب {book} با موفقیت ارسال شد. پس از تایید مدیریت در سایت نمایش داده خواهد شد.از نظر ارزشمند شما سپاسگزاریم."
+        else:
+            error = "متن نمیتواند خالی باشد."
+        context={
+            'book': book,
+            'comments': Comment.objects.filter(is_approved=True, book=book).order_by('-datetime_modified'),
+            'error': error,
+            'comment_form': CommentForm(),
+            'message': message,
+            }
+        return render(request, 'books/book_detail.html', context=context)
 
 
 def book_detail_view(request, pk):
