@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-ساخت کتاب جدید
+ویرایش کتاب {{ book.title }}
 {% endblock title %}
 
 {% block links %}
@@ -14,6 +14,6 @@
 <form method='post'>
     {% csrf_token %}
     {{ form|crispy }}
-    <input type='submit' class='btn btn-outline-success px-3 py-2 m-2' value='ذخیره کتاب'>
+    <input type='submit' class='btn btn-outline-success px-3 py-2 m-2' value='ویرایش کتاب'>
 </form>
 {% endblock content %}
