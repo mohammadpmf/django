@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
 جزییات {{ book.title }}
 {% endblock title %}
@@ -73,25 +75,21 @@
 
 <div class="d-flex justify-content-center">
     <div class="card shadow my-3 p-5 w-sm-75 w-100">
-        <h3>نظر خود را وارد کنید:</h3>
+        {% if user.is_authenticated %}
+        <h3 id="insert_a_comment">نظر خود را وارد کنید:</h3>
         <form method="POST">
-            <div class="form-group py-2">
-                <label class="py-1" for="author_name">نام شما:</label>
-                <input type="text" class="form-control" placeholder="علی علوی" name="author_name">
-            </div>
-            <div class="form-group py-2">
-                <label class="py-1" for="email">ایمیل شما:</label>
-                <input type="email" class="form-control" placeholder="example@gmail.com" name="email">
-            </div>
-            <div class="form-group py-2">
-                <label class="py-1" for="comment_text">متن نظر:</label>
-                <textarea class="form-control" name="text" rows="3"
-                            placeholder="نظر خود را اینجا وارد کنید."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">ارسال</button>
+            {% csrf_token %}
+            {{ comment_form|crispy }}
+            <input type="submit" class="btn btn-primary" value="ارسال">
         </form>
+        {% else %}
+            <h3>جهت گذاشتن نظر، لطفا ابتدا <a class="text-decoration-none" href="{% url 'login' %}?next={{book.get_absolute_url}}#insert_a_comment">وارد</a> شود.</h3>
+        {% endif %}
     </div>
 </div>
 <div>
 </div>
+{% if message %}
+<script>alert("{{ message|linebreaksbr }}");</script>
+{% endif %}
 {% endblock content %}

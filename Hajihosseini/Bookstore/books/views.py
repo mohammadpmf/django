@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
 from .models import Book, Comment
+from .forms import CommentForm
 
 
 class BookListView(generic.ListView):
@@ -25,15 +26,32 @@ class BookDetailView(generic.DetailView):
             'comments': Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
             }
         return context
+    
+    def post():
+        pass
 
 
 def book_detail_view(request, pk):
+    message = None
     book = get_object_or_404(Book, pk=pk)
     # comments = Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
     comments = book.comments.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
+    if request.method=='POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form = comment_form.save(commit=False)
+            comment_form.book = book
+            comment_form.user = request.user
+            comment_form.save()
+            comment_form = CommentForm()
+            message = f"نظر {request.POST.get('text')} از طرف {request.user} برای کتاب {book} با موفقیت ارسال شد. پس از تایید مدیریت در سایت نمایش داده خواهد شد.از نظر ارزشمند شما سپاسگزاریم."
+    else:
+        comment_form = CommentForm()
     context = {
         'book': book,
         'comments': comments,
+        'comment_form': comment_form,
+        'message': message,
     }
     return render(request, 'books/book_detail.html', context)
 
