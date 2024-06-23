@@ -13,12 +13,6 @@
 <form action="" method="post">
     {% csrf_token %}
     {{form|crispy}}
-    <p>
-        <input type="submit" class="btn btn-outline-primary px-3 pb-2" value="ثبت نام">
-    </p>
-    <p>
-        <a class="btn btn-outline-success px-3 pb-2" href="{% url 'login' %}">برو به صفحه ورود</a>
-        <a class="btn btn-outline-secondary px-3 pb-2" href="{% url 'home' %}">بازگشت به خانه</a>
-    </p>
+    <input type="submit" class="btn btn-outline-success px-3 pb-2" value="ثبت نام">
 </form>
 {% endblock content %}

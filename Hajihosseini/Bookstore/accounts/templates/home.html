@@ -11,26 +11,4 @@
 
 {% block content %}
 <h1 class='mb-5'>خانه</h1>
-{% if user.is_authenticated %}
-<h2>
-    <p>
-        Welcome {{ user }}
-    </p>
-    <form action="{% url 'logout' %}" method="POST">
-        {% csrf_token %}
-        <a class="btn btn-outline-warning px-4 pb-3 pt-2" href="{% url 'password_change' %}">تغییر رمز عبور</a>
-        <input type="submit" class="btn btn-outline-danger px-4 pb-3 pt-2" value="خروج">
-    </form>
-</h2>
-{% else %}
-<p>
-<a href="{% url 'login' %}" class="btn btn-outline-success px-3 pb-2">
-    برو به صفحه وارد شدن
-</a>
-<span class="px-2"></span>
-<a href="{% url 'signup' %}" class="btn btn-outline-primary px-3 pb-2">
-    برو به صفحه ثبت نام
-</a>
-</p>
-{% endif %}
 {% endblock content %}

@@ -9,8 +9,40 @@
 
 
 {% block content %}
+<div class="row flex-row-reverse justify-content-md-center">
     {% for book in books %}
-        {% comment %} <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> {% endcomment %}
-        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a>
+    <div class="card m-2" style="max-width: 45%">
+        <div class="row g-0 h-100" dir="rtl">
+            <div class="col-md-4">
+                <img src="https://newcdn.fidibo.com/images/books/69249_94233_normal.jpg"
+                        class="img-fluid rounded-start" alt="...">
+                        {% comment %} {% if book.cover %}
+                            <h3 class="card-title"><strong><a href="{% url 'book.cover.url' %}">{{ book.title }}</a></strong></h3>
+                        {% else %}
+                            <h3 class="card-title"><strong><a href="{% url 'book.cover.url' %}">{{ book.title }}</a></strong></h3>
+                        {% endif %} {% endcomment %}
+            </div>
+            <div class="col-md-8 h-100">
+                <div class="d-flex flex-column justify-content-between h-100">
+                    <div class="card-body">
+                        {% comment %} <h3 class="card-title"><strong><a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a></strong></h3> {% endcomment %}
+                        <h3 class="card-title"><strong><a class="text-info text-decoration-none" href="{{book.get_absolute_url}}">{{ book.title }}</a></strong></h3>
+                        <p class="card-text pt-3">{{ book.description|truncatewords:32 }}</p>
+                        <p class="text-muted">نویسنده: {{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
+</div>
+
 {% endblock content %}
+
+{% block footer %}
+<footer class="bg-light text-center text-lg-start mt-5">
+    <div class="text-center bg-grey">
+        <p>دوره آموزشی جنگو <a class="text-info text-decoration-none" href="https://codingyar.com/" target="_blank">کدینگ یار 💙</a></p>
+    </div>
+</footer>
+{% endblock footer %}
