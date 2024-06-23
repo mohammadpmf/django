@@ -2,8 +2,6 @@
 #Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
 __pycache__
-templatetags/
-links.txt
 venv/
 .idea/
 .vscode/
