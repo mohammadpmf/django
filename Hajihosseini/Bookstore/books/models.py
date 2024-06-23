@@ -13,7 +13,7 @@ class Book(models.Model):
     year_published = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='سال انتشار')
     number_of_pages = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='تعداد صفحات کتاب')
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد کتاب')
-    book_creator = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='ایجاد کننده کتاب')
+    book_creator = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='ایجاد کننده کتاب', related_name='books')
 
     def __str__(self):
         return f"{self.title}"
@@ -21,3 +21,22 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse("book_detail", kwargs={"pk": self.pk})
     
+
+class Comment(models.Model):
+    text = models.TextField()
+    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد')
+    datetime_modified = models.DateTimeField(auto_now=True, verbose_name='زمان آخرین تغییر')
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, verbose_name='کتاب', related_name='comments')
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='کاربر', related_name='comments')
+    is_approved = models.BooleanField(default=False, verbose_name='تایید')
+    
+    def __str__(self):
+        return f"{self.user}: {self.text}"
+
+
+class Favorite(models.Model):
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, verbose_name='کتاب', related_name='favorites')
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE, verbose_name='کاربر', related_name='favorites')
+    
+    class Meta:
+        unique_together = ('book', 'user')
