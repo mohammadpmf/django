@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 class Book(models.Model):
     title = models.CharField(max_length=255, verbose_name='عنوان کتاب')
@@ -16,3 +17,7 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+    def get_absolute_url(self):
+        return reverse("book_detail", kwargs={"pk": self.pk})
+    
