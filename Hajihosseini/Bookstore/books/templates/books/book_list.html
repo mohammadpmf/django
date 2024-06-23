@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
 لیست کتاب ها
 {% endblock title %}
@@ -14,13 +16,13 @@
     <div class="card m-2" style="max-width: 45%">
         <div class="row g-0 h-100" dir="rtl">
             <div class="col-md-4">
-                <img src="https://newcdn.fidibo.com/images/books/69249_94233_normal.jpg"
-                        class="img-fluid rounded-start" alt="...">
-                        {% comment %} {% if book.cover %}
-                            <h3 class="card-title"><strong><a href="{% url 'book.cover.url' %}">{{ book.title }}</a></strong></h3>
-                        {% else %}
-                            <h3 class="card-title"><strong><a href="{% url 'book.cover.url' %}">{{ book.title }}</a></strong></h3>
-                        {% endif %} {% endcomment %}
+                {% if book.cover %}
+                <img src="{{ book.cover.url }}"
+                class="img-fluid rounded-start p-1" alt="...">
+                {% else %}
+                <img src="{% static 'icons/book.png' %}"
+                class="img-fluid rounded-start p-1" alt="...">
+                {% endif %}
             </div>
             <div class="col-md-8 h-100">
                 <div class="d-flex flex-column justify-content-between h-100">

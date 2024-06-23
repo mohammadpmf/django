@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
 جزییات {{ book.title }}
 {% endblock title %}
@@ -15,6 +17,9 @@
             <div>
                 {% if book.cover %}
                 <img src="{{ book.cover.url }}"
+                class="img-fluid rounded-start" alt="عکس جلد کتاب">
+                {% else %}
+                <img src="{% static 'icons/book.png' %}"
                 class="img-fluid rounded-start" alt="عکس جلد کتاب">
                 {% endif %}
             </div>

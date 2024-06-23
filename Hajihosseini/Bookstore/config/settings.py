@@ -154,3 +154,9 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "shookooljooni254@gmail.com"
 EMAIL_HOST_PASSWORD = "dhbi felf qtxe bxgu"
 ########################     END EMAIL     ########################
+
+
+########################     MEDIA FILES     ########################
+MEDIA_URL = '/media/'
+MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
+########################     END MEDIA FILES     ########################
