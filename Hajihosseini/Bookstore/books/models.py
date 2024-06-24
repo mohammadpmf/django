@@ -23,12 +23,13 @@ class Book(models.Model):
     
 
 class Comment(models.Model):
-    text = models.TextField()
+    text = models.TextField(verbose_name='متن نظر')
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد')
     datetime_modified = models.DateTimeField(auto_now=True, verbose_name='زمان آخرین تغییر')
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, verbose_name='کتاب', related_name='comments')
     user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='کاربر', related_name='comments')
     is_approved = models.BooleanField(default=False, verbose_name='تایید')
+    is_recommended = models.BooleanField(default=True, verbose_name='پیشنهاد می شود')
     
     def __str__(self):
         return f"{self.user}: {self.text}"

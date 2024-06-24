@@ -32,11 +32,22 @@ class BookDetailView(generic.DetailView):
     def post(self, request, *args, **kwargs):
         pk=kwargs.get('pk')
         text = request.POST.get('text')
+        is_recommended = request.POST.get('is_recommended')
+        if is_recommended == 'on':
+            is_recommended = True
+        else:
+            is_recommended = False
+        # توضیح این که وقتی تیک رو میزدیم، مقدار رو میفرستاد و داخلش مینوشت on که یعنی
+        # تیکش زده است و روشنه. اما وقتی تیکش رو برمیداشتیم کلا چیزی به اون اسم نمیفرستاد
+        # و مقدارش None بود که مشکل ایجاد میکرد. خلاصه در هر دو حالت ارور میداد و نمیتونست
+        # تو دیتابیس ذخیره کنه. خودم با ایف و الس بالا گفتم اگر آن بود مقدارش رو بذاره ترو
+        # اگر هم on نبود که یعنی هیچی نفرستاده و None هست. اما نمیتونیم برای ساخت یک کامنت
+        # مقدار این متغیر رو نان بذاریم. عوضش کردم به False
         book = get_object_or_404(Book, pk=pk)
         error = ""
         message = None
         if text!="":
-            Comment.objects.create(text=text, book=book, user=request.user)
+            Comment.objects.create(text=text, is_recommended=is_recommended, book=book, user=request.user)
             message = f"نظر {text} از طرف {request.user} برای کتاب {book} با موفقیت ارسال شد. پس از تایید مدیریت در سایت نمایش داده خواهد شد.از نظر ارزشمند شما سپاسگزاریم."
         else:
             error = "متن نمیتواند خالی باشد."

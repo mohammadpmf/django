@@ -62,14 +62,25 @@
 <div class="d-flex justify-content-center">
     <div class="card shadow my-3 p-5 w-sm-75 w-100">
         <h2 class="mb-5">نظرات:</h2>
-        {% for comment in comments %}
-            {% if comment.is_approved %}
-                <div class="border-bottom mb-3">
-                    <h5 class="mb-3">{{ comment.user }}</h5>
-                    <p>{{ comment.text|linebreaks }}</p>
-                </div>
-            {% endif %}
-        {% endfor %}
+        {% if comments %}
+            {% for comment in comments %}
+                {% if comment.is_approved %}
+                    <div class="border-bottom mb-3">
+                        <h5 class="mb-3">
+                            {{ comment.user }}
+                            {% if comment.is_recommended %}
+                                پیشنهاد می شود 👍
+                            {% else %}
+                                پیشنهاد نمی شود 
+                            {% endif %}
+                        </h5>
+                        <p>{{ comment.text|linebreaks }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>برای این کتاب هنوز نظری ثبت نشده است. اولین نفر باشید</p>
+        {% endif %}
     </div>
 </div>
 

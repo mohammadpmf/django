@@ -11,8 +11,8 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['text', 'book', 'user', 'is_approved']
-    list_display_links = ['text', 'book', 'user']
+    list_display = ['text', 'book', 'user', 'is_recommended', 'is_approved']
+    list_display_links = ['text', 'book', 'user', 'is_recommended']
     list_editable = ['is_approved']
 
 
