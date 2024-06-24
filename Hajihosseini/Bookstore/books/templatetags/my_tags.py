@@ -10,3 +10,7 @@ def count_words(value: str):
 def count_something(value: str, arg: str):
     number = value.count(arg)
     return number
+
+@register.filter(name='remove_brs')
+def remove_brs(value: str):
+    return value.replace('<br>', '')

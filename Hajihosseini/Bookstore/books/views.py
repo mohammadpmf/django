@@ -65,10 +65,16 @@ class BookDetailView(generic.DetailView):
     def get_context_data(self,*args, **kwargs): # اگه بخوایم تابع get_context_data رو بنویسیم، kwargs رو نمیشه حذف کرد. خودش کلید آبجکت رو به صورت kwargs میفرسته.
         # book=kwargs.get('object') # اول ازش این شکلی استفاده کرده بودم. بعد تابع get_object رو یاد گرفتم که به نظرم خیلی قشنگ تر و تمیز تره
         book = self.get_object()
+        if self.request.user.is_authenticated:
+            liked = Favorite.objects.filter(book=book, user=self.request.user).count()
+            # اگه لایک کرده باشه که ۱ میده که همون ترو هست دیگه تبدیلش نکردم
+        else:
+            liked=False
         context={
             'book': book,
-            'comments': Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified'),
+            'comments': Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified').select_related('user'),
             'comment_form': CommentForm(),
+            'liked': liked,
             }
         return context
     
@@ -80,29 +86,43 @@ class BookDetailView(generic.DetailView):
     # کسی یه جوری یه متد پست بفرسته که بدون لاگین بخواد کامنت بذاره، بهش ارور میده.
     def post(self, request, *args, **kwargs):
         book = self.get_object()
-        comments = Comment.objects.filter(is_approved=True, book=book).order_by('-datetime_modified')
-        comment_form = CommentForm(request.POST)
+        comments = Comment.objects.filter(is_approved=True, book=book).order_by('-datetime_modified').select_related('user')
+        comment_form = CommentForm()
         message = None
-        if comment_form.is_valid():
-            comment_form = comment_form.save(commit=False)
-            comment_form.book = book
-            comment_form.user = request.user
-            comment_form.save()
-            message = f"نظر {request.POST.get('text')} از طرف {request.user} برای کتاب {book} با موفقیت ارسال شد. پس از تایید مدیریت در سایت نمایش داده خواهد شد.از نظر ارزشمند شما سپاسگزاریم."
-            comment_form = CommentForm()
+        liked = Favorite.objects.filter(book=book, user=self.request.user).count()
+        like_situation = request.POST.get('like_situation')
+        if like_situation in ['0', '1']: # یعنی طرف رو دکمه لایک زده و کامنت نذاشته
+            if like_situation=='1':
+                Favorite.objects.create(book=book, user=request.user)
+                liked = True
+            else:
+                temp = Favorite.objects.filter(book=book, user=request.user)
+                temp.delete()
+                liked = False
+        else:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment_form = comment_form.save(commit=False)
+                comment_form.book = book
+                comment_form.user = request.user
+                comment_form.save()
+                message = f"نظر {request.POST.get('text')} از طرف {request.user} برای کتاب {book} با موفقیت ارسال شد. پس از تایید مدیریت در سایت نمایش داده خواهد شد.از نظر ارزشمند شما سپاسگزاریم."
+                comment_form = CommentForm()
+        print(message)
         context={
             'book': book,
             'comments': comments,
             'comment_form': comment_form,
             'message': message,
+            'liked': liked,
             }
         return render(request, 'books/book_detail.html', context)
 
 
 def book_detail_view(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    # comments = Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
-    comments = book.comments.filter(is_approved=True, book=book.pk).order_by('-datetime_modified')
+    # comments = Comment.objects.filter(is_approved=True, book=book.pk).order_by('-datetime_modified').select_related('user')
+    comments = book.comments.filter(is_approved=True, book=book.pk).order_by('-datetime_modified').select_related('user')
     comment_form = CommentForm()
     message = None
     if request.method=='POST':

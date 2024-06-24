@@ -4,6 +4,8 @@
 
 {% load crispy_forms_tags %}
 
+{% load my_tags %}
+
 {% block title %}
 جزییات {{ book.title }}
 {% endblock title %}
@@ -52,6 +54,20 @@
             <h3 class="align-self-center pt-2 text-muted align-self-md-end">
                 {{ book.price }} $
             </h3>
+            {% if user.is_authenticated %}
+            <h3 class="align-self-center pt-2 text-muted align-self-md-end mt-5">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% if liked %}
+                        <input type="hidden" name="like_situation" value="0">
+                        <button class="btn" type="submit"><img src="{% static 'icons/liked.png' %}" alt="🧡" width=48></button>
+                    {% else %}
+                        <input type="hidden" name="like_situation" value="1">
+                        <button class="btn" type="submit"><img src="{% static 'icons/unliked.png' %}" alt="🤍" width=48></button>
+                    {% endif %}
+                </form>
+            </h3>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -103,6 +119,6 @@
 <div>
 </div>
 {% if message %}
-<script>alert("{{ message }}");</script>
+<script>alert("{{ message|linebreaksbr|remove_brs }}");</script>
 {% endif %}
 {% endblock content %}
