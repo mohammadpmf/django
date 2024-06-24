@@ -100,15 +100,24 @@ class BookCreateView(LoginRequiredMixin, generic.CreateView):
     fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'user']
 
 
-class BookUpdateView(LoginRequiredMixin, generic.UpdateView):
+class BookUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Book
     fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'user']
     template_name = 'books/book_update_form.html'
-    # context_object_name = 'book'
+    context_object_name = 'book'
+
+    def test_func(self):
+        object = self.get_object()
+        return object.user==self.request.user
 
 
-class BookDeleteView(LoginRequiredMixin, generic.DeleteView):
+
+class BookDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Book
     template_name = 'books/book_confirm_delete.html'
     context_object_name = 'book'
     success_url = reverse_lazy('books')
+
+    def test_func(self):
+        object = self.get_object()
+        return object.user==self.request.user

@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}My 403 with sound :D{% endblock title %}
+{% block content %}
+<h1 class="m-5 p-5 bg-warning" style="text-align: center" >ای کلک!!! میخواستی ما رو هااااااک کنی😂</h1>
+<h1 class="m-5 p-5 bg-warning" style="text-align: center" >کور خووندی. شما به این صفحه دسترسی نداری.</h1>
+<button id='btn' onclick="clicked()" class="d-block display-1 bg-danger text-white">اینجا کلیک کن😁</button>
+<script>
+var playing=0;
+var audio = new Audio("{% static 'sounds/titanic_fail.mp3' %}");
+function clicked(){
+    if (playing==0){
+        document.getElementById('btn').innerHTML='😂';
+        playing=1;
+        audio.play();
+    }
+    else{
+        document.getElementById('btn').innerHTML='اینجا کلیک کن😁';
+        playing=0;
+        audio.pause();
+    }
+}
+</script>
+{% endblock content %}
