@@ -13,7 +13,7 @@ class Book(models.Model):
     year_published = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='سال انتشار')
     number_of_pages = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='تعداد صفحات کتاب')
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد کتاب')
-    book_creator = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='ایجاد کننده کتاب', related_name='books')
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name='ایجاد کننده کتاب', related_name='books')
 
     def __str__(self):
         return f"{self.title}"

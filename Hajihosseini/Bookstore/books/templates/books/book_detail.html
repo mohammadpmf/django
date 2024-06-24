@@ -41,10 +41,12 @@
             {% if book.number_of_pages %}
                 <h5 class="small my-1"><span class="text-muted">تعداد صفحات: </span>{{ book.number_of_pages }}</h5>
             {% endif %}
-            <div>
-                <a href="{% url 'book_update' book.pk %}" class='btn btn-outline-primary px-3'>ویرایش کتاب</a>
-                <a href="{% url 'book_delete' book.pk %}" class='btn btn-outline-danger px-3'>حذف کتاب</a>
-            </div>
+            {% if user == book.user %}
+                <div>
+                    <a href="{% url 'book_update' book.pk %}" class='btn btn-outline-primary px-3'>ویرایش کتاب</a>
+                    <a href="{% url 'book_delete' book.pk %}" class='btn btn-outline-danger px-3'>حذف کتاب</a>
+                </div>
+            {% endif %}
         </div>
         <div class="col-xs-12 col-md-3 d-flex flex-column">
             <h3 class="align-self-center pt-2 text-muted align-self-md-end">

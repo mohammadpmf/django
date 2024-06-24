@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import Book, Comment
 from .forms import CommentForm
@@ -29,6 +31,12 @@ class BookDetailView(generic.DetailView):
             }
         return context
     
+    # @login_required # این رو وقتی میذاشتم، موقعی که لاگین نبود بهم گیر میداد.
+    # اما خودم بدون این توی اچ تی ام ال بررسی کردم که اگه لاگین نیست اصلا فرم رو نشون نده.
+    # با این حال اگه بشه به یه روشی فه این یو آر ال پست کرد و اطلاعات رو فرستاد، باز احتمالا
+    # ارور بده. اما روشی که خودش ساخته بود جالب نبود. کلا اگه لاگین نبودی نمیتونستی اطلاعات
+    # کتاب رو هم ببینی. مال من میشه دید. اما نمیشه کامنت گذاشت و باید لاگین کرد. حالا اگه
+    # کسی یه جوری یه متد پست بفرسته که بدون لاگین بخواد کامنت بذاره، بهش ارور میده.
     def post(self, request, *args, **kwargs):
         pk=kwargs.get('pk')
         text = request.POST.get('text')
@@ -86,20 +94,20 @@ def book_detail_view(request, pk):
     return render(request, 'books/book_detail.html', context)
 
 
-class BookCreateView(generic.CreateView):
+class BookCreateView(LoginRequiredMixin, generic.CreateView):
     model = Book
     template_name = 'books/book_form.html'
-    fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'book_creator']
+    fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'user']
 
 
-class BookUpdateView(generic.UpdateView):
+class BookUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Book
-    fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'book_creator']
+    fields = ['title', 'author', 'description', 'price', 'cover', 'translator', 'publisher', 'year_published', 'number_of_pages', 'user']
     template_name = 'books/book_update_form.html'
     # context_object_name = 'book'
 
 
-class BookDeleteView(generic.DeleteView):
+class BookDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Book
     template_name = 'books/book_confirm_delete.html'
     context_object_name = 'book'

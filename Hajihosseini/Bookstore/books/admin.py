@@ -5,8 +5,8 @@ from .models import Book, Comment, Favorite
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'price', 'year_published', 'book_creator']
-    list_display_links = ['title', 'author', 'price', 'year_published', 'book_creator']
+    list_display = ['title', 'author', 'price', 'year_published', 'user']
+    list_display_links = ['title', 'author', 'price', 'year_published', 'user']
 
 
 @admin.register(Comment)
