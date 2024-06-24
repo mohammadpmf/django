@@ -1,3 +1,5 @@
+from django.db.models.query import QuerySet
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.urls import reverse_lazy
@@ -5,8 +7,47 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
-from .models import Book, Comment
+from .models import Book, Comment, Favorite
 from .forms import BookForm, CommentForm
+
+
+class BookMyFavorites1(LoginRequiredMixin, generic.ListView):
+    # اول این طوری نوشتم. ولی به نظرم خیلی جالب نیومد. این شد که دومی رو نوشتم.
+    # سرعت این احتمالا بیشتره. چون ۴ تا کوئری میزد. اما دومیه ۵ تا میزنه.
+    # تو این میگم بره از تو علاقه مندی ها، اونایی که یوزرشون یوزر فعلی است همه رو بیاره
+    # حالا که آی دی کتاب ها رو میاره، کل اطلاعات کتاب ها رو هم بیاره که این طوری میشد ۴ تا کوئری
+    # البته یکیش که مال سشن بود و یکی هم واسه این که خود جنگو بفهمه یوزر فعلی کیه همیشه میزنه.
+    # تو دومی بهش گفتم بروه تو همه کتاب ها، تو قسمت علاقه مندیشون.
+    # تا اینجا که مشکلی نیست چون خود جنگو داشت. اما با لوکاپ بهش میگم برو تو علاقه مندی شون
+    # تو قسمت یوزرهاشون، اونایی که یوزرشون یوزر فعلی هست رو بیار. این طوری ۵ تا کوئری میزد
+    # که باز یکیش مال سشن هست و یکی هم این که یوزر رو خودش میگیره.
+    # خلاصه این که یه کوئری بیشتر هست. اما گفتم این توضیحات رو اینجا بنویسم.
+    # هر دو روش هم جالب بودند گفتم بذارم.
+    model = Favorite
+    template_name = 'books/book_list.html'
+    context_object_name = 'books'
+    paginate_by=10
+
+    def get_queryset(self):
+        user = self.request.user
+        favorites = Favorite.objects.filter(user=user).select_related('book')
+        books=[]
+        for book in favorites:
+            books.append(book.book)
+        return books
+
+
+class BookMyFavorites2(LoginRequiredMixin, generic.ListView):
+    model = Book
+    template_name = 'books/book_list.html'
+    context_object_name = 'books'
+    paginate_by=10
+
+    def get_queryset(self):
+        user = self.request.user
+        books = Book.objects.filter(favorites__user=user)
+        print(books)
+        return books
 
 
 class BookListView(generic.ListView):
