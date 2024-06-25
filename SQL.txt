@@ -1,0 +1,9 @@
+برای دیدن دستور معادل کد اس کیو ال
+py manage.py sqlmigrate app_name number
+sample:
+py manage.py sqlmigrate store 0005
+
+برای رفتن به مایگریشن خاص
+py manage.py migrate app_name number
+sample:
+py manage.py migrate store 0005
