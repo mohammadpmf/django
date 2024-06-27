@@ -7,5 +7,85 @@
 </head>
 <body>
     {{ alaki }}
+    {% comment %}
+    تمرین ۱۱: تمام کامنت ها رو بگیر. (اسم کامنت گذار) + اسم محصولی که براش کامنت گذاشته شده
+    و همچنین وضعیت کامنت که تایید شده هست یا نیست یا در انتظار تایید هست.
+    {% for comment in comments %}
+        <p>
+            Commentor: {{ comment.name }}
+            Product: {{ comment.product.name }}
+            Status: {{ comment.status }}
+        </p>
+    {% endfor %}
+    {% endcomment %}
+    {% comment %}
+    تمرین ۱۲: برای تمام محصولات، کامنت هاش رو نشون بده. (کامنت آی دی هاشون رو هم نشون بده)
+    {% for product in products %}
+        <h1>
+            {{ product.name }}
+        </h1>
+        {% for comment in product.comments.all %}
+            <p>
+                Comment ID: {{ comment.id }}
+                body: {{ comment.body }}
+            </p>
+        {% endfor %}
+    {% endfor %}
+    {% endcomment %}
+    {% comment %}
+    تمرین ۱۳: برای تمام محصولات، کامنت هاش رو نشون بده. عنوان کتگوری اش رو هم نشون بده
+    {% for product in products %}
+        <h1>
+            Product: {{ product.name }}.
+            Category: {{ product.category.title }}
+        </h1>
+        <h2>
+            Comments: 
+        </h2>
+        {% for comment in product.comments.all %}
+            <p>
+                Comment ID: {{ comment.id }}
+                Commentor: {{ comment.name }}
+                text: {{ comment.body }}
+            </p>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+    {% endcomment %}
+    {% comment %}
+    تمرین ۱۴: برای تمام سفارشات، لیست اردرآیتم ها رو بگیرید و آی دی اردرآیتم ها رو نمایش بدید
+    علاوه بر این، اسم کوچیک کاستومری که اردر رو داده رو هم نمایش بدید.
+    {% for order in orders %}
+        <h1>
+            Customer: {{ order.customer.first_name }} {{ order.customer.last_name}}
+        </h1>
+        <h2>
+            Orders:
+        </h2>
+        {% for item in order.items.all %}
+            {{ item.id }}
+        {% endfor %}
+    {% endfor %}
+    {% endcomment %}
+    {% comment %}
+    تمرین ۱۵: برای تمام سفارشات، لیستی از نام محصولات سفارش داده شده را به همراه
+    نام سفارش دهنده بنویسید.
+    {% for order in orders %}
+    <h1>
+        Customer: {{ order.customer.first_name }} {{ order.customer.last_name}}
+    </h1>
+    <h2>
+        Orders:
+    </h2>
+    <ol>
+        {% for item in order.items.all %}
+        <li>
+            {{ item.product.name }}
+        </li>
+        {% endfor %}
+    </ol>
+    {% endfor %}
+    {% endcomment %}
+
 </body>
 </html>
