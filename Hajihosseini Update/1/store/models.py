@@ -39,6 +39,16 @@ class Address(models.Model):
     street = models.CharField(max_length=255)
 
 
+class OrderManager(models.Manager):
+    def get_by_status(self, status):
+        return self.get_queryset().filter(status=status)
+
+
+class UnpaidOrderManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Order.ORDER_STATUS_UNPAID)
+
+
 class Order(models.Model):
     ORDER_STATUS_PAID = 'p'
     ORDER_STATUS_UNPAID = 'u'
@@ -53,6 +63,9 @@ class Order(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=ORDER_STATUS, default=ORDER_STATUS_UNPAID)
 
+    my_manager = OrderManager()
+    unpaid_manager = UnpaidOrderManager()
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='items')
@@ -63,6 +76,22 @@ class OrderItem(models.Model):
     class Meta:
         unique_together = [['order', 'product']]
 
+
+class CommentManager(models.Manager):
+    def get_approved(self):
+        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
+
+    def get_not_approved(self):
+        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_NOT_APPROVED)
+        
+    def get_waiting(self):
+        return self.get_queryset().filter(status=Comment.COMMENT_STATUS_WAITING)
+
+
+class ApprovedCommentManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Comment.COMMENT_STATUS_APPROVED)
+    
 
 class Comment(models.Model):
     COMMENT_STATUS_WAITING = 'w'
@@ -80,6 +109,9 @@ class Comment(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=2, choices=COMMENT_STATUS, default=COMMENT_STATUS_WAITING)
 
+    my_objects = CommentManager()
+    approved_objects=ApprovedCommentManager()
+
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -92,3 +124,52 @@ class CartItem(models.Model):
 
     class Meta:
         unique_together = [['cart', 'product']]
+
+
+
+
+# https://docs.djangoproject.com/en/5.0/howto/custom-lookups/
+# برای اضافه کردن لوکاپ کاستومایز شده خودمون، نوشته بود که باید قبل از این که ازش استفاده بشه تعریفش کنیم.
+# تو کدهای ویوز، قبل از استفاده تعریف کردم این ها رو و کار میکرد.
+# اما اصولیش که تو سایت جنگو و لینکی که گذاشتم نوشته بود اینه که یا تو فایل مدلز بذاریم که من
+# همینجا گذاشتم و دیدم کار میکنه و درست هم هست. یا این که تو فایل اپس د اخل
+# AppConfig که تو این پروژه میشه فایل اپس و کلاس StoreConfig
+# داخل تابع ready اون کلاس رجیسترش کنیم که وقتی من نوشتم
+# def ready خود وی اس کد کمک کرد و اونجا هم نوشتم کار کرد. اما به نظرم اینجا خیلی راحت تر و سرراست تره.
+# خلاصه این مثال اول سایتشون بود که نوشتم و برای بررسی اینه که بتونیم با لوکاپی به اسم ne
+# چیزهایی که دقیقا مخالف با چیز مد نظر ما هستند رو بگیریم. مثلا name__ne="Ali"
+# رو اگه رو کامنت ها بزنیم، کامنت هایی رو میاره که اسم طرف علی نباشه.
+# مثال جالبی بود گذاشتم باشه. حالا خودم هم میخوام لوکاپ خودم رو بنویسم.
+from django.db.models import Lookup
+from django.db.models import Field
+
+
+@Field.register_lookup
+class NotEqual(Lookup):
+    lookup_name = "ne"
+
+    def as_sql(self, compiler, connection):
+        lhs, lhs_params = self.process_lhs(compiler, connection)
+        rhs, rhs_params = self.process_rhs(compiler, connection)
+        params = lhs_params + rhs_params
+        return "%s <> %s" % (lhs, rhs), params
+        return f"{lhs} <> {rhs}", params # این هم خودم تغییر دادم و کار میکرد. اما شاید مشکل اس کیو ال اینجکشن داشته باشه
+
+
+@Field.register_lookup
+class LengthLessThan(Lookup):
+    lookup_name = "length_less_than"
+
+    def as_sql(self, compiler, connection):
+        lhs, lhs_params = self.process_lhs(compiler, connection)
+        rhs, rhs_params = self.process_rhs(compiler, connection)
+        print(100*'-')
+        print(lhs) # فهمیدم که لفت هند سایت میاد اسم تیبل و اون ستون خاص رو مینویسه
+        print(lhs_params) # یه لیست خالی بود. احتمال زیاد همیشه این طور نیست 😊
+        print(100*'-')
+        print(rhs) # یه درصد اس نوشته بود. چون یه وردی لوکاپ بهش داده بودم. شاید بیشتر بدیم ۲ ۳ تا درصد اس بشه. اما گفتم الکی وقتم رو نگیرم لازم شد یاد میگیرم همون موقع
+        print(100*'-')
+        print(rhs_params) # یه لیست بود که مقدار استرینگی که مساوی گذاشته بودم یعنی تو مثال من ۱۰۰ رو داده بود.
+        params = lhs_params + rhs_params
+        return "LENGTH(%s) < %s" % (lhs, rhs), params
+    
