@@ -1,7 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from django.shortcuts import get_object_or_404
 
+from .models import Product
+from .serializers import ProductSerializer
 
 @api_view()
 def home_page(request):
@@ -11,9 +13,15 @@ def home_page(request):
 
 @api_view()
 def product_list(request):
-    return Response('List of products')
+    query_set = Product.objects.all()
+    serializer = ProductSerializer(query_set, many=True)
+    return Response(serializer.data)
 
 
 @api_view()
 def product_detail(request, pk):
-    return Response(pk)
+    product = get_object_or_404(Product, pk=pk)
+    serializer = ProductSerializer(product)
+    print(serializer)
+    print(serializer.data)
+    return Response(serializer.data)
