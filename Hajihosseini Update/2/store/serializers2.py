@@ -36,6 +36,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_price_after_tax(self, product: Product):
         return round(product.unit_price*TAX_RATE, 2)
+    
+    # custom validation
+    def validate(self, data):
+        # داخل تابع ولیدیت با اسم هایی که ما گذاشتیم کار نداره. با اسم های اصلی تو دیتابیس
+        # کار میکنه. مثلا اینجا میخوایم که قیمت رو کمتر از ۵ دلار کسی نده
+        if data['unit_price']<5:
+            raise serializers.ValidationError("Product price should be greater than or equal to 5!")
+        if data['unit_price']>1050:
+            raise serializers.ValidationError("Product price should be less than or equal to 1050!")
+        if len(data['name'])<2:
+            raise serializers.ValidationError("You should enter a real name for your product. No word in english has a length less than 2. الکی نیست که داداچ😁")
+        return data
 
 
 class DiscountSerializer(serializers.Serializer):
