@@ -13,16 +13,6 @@ class CategorySerializer(serializers.Serializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    remained = serializers.IntegerField(source='inventory')
-    price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')
-    price_after_tax = serializers.SerializerMethodField() # اسم متغیر کامپیوتد فیلد که به دلخواه خودمون
-    # هست. اما برای محاسبه اش به دنبال تابعی هم نام با کامپیوتد فیلد ما میگرده که اولش گیت آندراسکور
-    # باشه. که پایین نوشتم. اگه نخوایم اسمش اون باشه، میتونیم داخل سریالایزرمتد فیلد یه اتریبیوت به اسم
-    # method_name بهش بدیم و هر اسمی که خودمون دوست داریم به تابع بدیم. اما من دیگه نذاشتم و فقط
-    # توضیحش رو همینجا نوشتم که اگه لازم شد این کار رو بکنم. فقط حواسم باشه که اسم متد رو باید 
-    # داخل کوتیشن بذاریم. یعنی استرینگِ اسمش رو باید بدیم.
-    category = CategorySerializer()
-
     class Meta:
         model=Product
         fields = ['id', 'name', 'inventory', 'remained', 'price', 'price_after_tax', 'category']
@@ -33,6 +23,16 @@ class ProductSerializer(serializers.ModelSerializer):
         # یه فیلد رو بدیم و این طوری به اشتباه بفرستیم.
         # exclude استفاده از
         # exclude = ['datetime_created', 'datetime_modified', 'discounts', 'slug']
+
+    remained = serializers.IntegerField(source='inventory', read_only=True)
+    price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')
+    price_after_tax = serializers.SerializerMethodField() # اسم متغیر کامپیوتد فیلد که به دلخواه خودمون
+    # هست. اما برای محاسبه اش به دنبال تابعی هم نام با کامپیوتد فیلد ما میگرده که اولش گیت آندراسکور
+    # باشه. که پایین نوشتم. اگه نخوایم اسمش اون باشه، میتونیم داخل سریالایزرمتد فیلد یه اتریبیوت به اسم
+    # method_name بهش بدیم و هر اسمی که خودمون دوست داریم به تابع بدیم. اما من دیگه نذاشتم و فقط
+    # توضیحش رو همینجا نوشتم که اگه لازم شد این کار رو بکنم. فقط حواسم باشه که اسم متد رو باید 
+    # داخل کوتیشن بذاریم. یعنی استرینگِ اسمش رو باید بدیم.
+    category = CategorySerializer()
 
     def get_price_after_tax(self, product: Product):
         return round(product.unit_price*TAX_RATE, 2)

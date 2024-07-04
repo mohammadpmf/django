@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from django.shortcuts import get_object_or_404
 
 from .models import Category, Discount, Product
@@ -15,21 +16,33 @@ def home_page(request):
     return Response('Hi')
 
 
-@api_view()
+@api_view(['GET', 'POST'])
 def product_list(request):
-    # query_set = Product.objects.all()
-    # برای بهبود سرعت سریالایزر باید این کوئری ست رو بهینه کنیم. اما وقتی سلکت ریلیتد میزدم،
-    # ترتیبشون عوض میشد و ۱۴ میومد اول و غیره. برای این که به هم نریزه، خودم دوباره بر اساس
-    # آی دی محصولات هم گفتم مرتب کنه
-    query_set = Product.objects.all().select_related('category').order_by('id')
-    # serializer = ProductSerializer(query_set, many=True)
-    # این حالت عادی بود. اما برای این که از تو سریالایزر بشه
-    # از هایپرلینکد ریلیتد فیلد استفاده بشه، ارور میده میگه که رکوئست رو هم براش باید
-    # ارسال میکردیم که به خاطر همین میایم اینجا رکوئست رو هم براش میفرستیم. برای این که تو حالت
-    # دیتیل هم بشه لینک رو دید و روش کلیک کرد و همین ارور رو به ما نده، تو دیتیل ویو هم همین
-    # کار رو کردم اما دیگه این توضیحات رو اونجا نمینویسم
-    serializer = ProductSerializer(query_set, many=True, context={'request': request})
-    return Response(serializer.data)
+    if request.method=='GET':
+        # query_set = Product.objects.all()
+        # برای بهبود سرعت سریالایزر باید این کوئری ست رو بهینه کنیم. اما وقتی سلکت ریلیتد میزدم،
+        # ترتیبشون عوض میشد و ۱۴ میومد اول و غیره. برای این که به هم نریزه، خودم دوباره بر اساس
+        # آی دی محصولات هم گفتم مرتب کنه
+        query_set = Product.objects.all().select_related('category').order_by('id')
+        # serializer = ProductSerializer(query_set, many=True)
+        # این حالت عادی بود. اما برای این که از تو سریالایزر بشه
+        # از هایپرلینکد ریلیتد فیلد استفاده بشه، ارور میده میگه که رکوئست رو هم براش باید
+        # ارسال میکردیم که به خاطر همین میایم اینجا رکوئست رو هم براش میفرستیم. برای این که تو حالت
+        # دیتیل هم بشه لینک رو دید و روش کلیک کرد و همین ارور رو به ما نده، تو دیتیل ویو هم همین
+        # کار رو کردم اما دیگه این توضیحات رو اونجا نمینویسم
+        serializer = ProductSerializer(query_set, many=True, context={'request': request})
+        return Response(serializer.data)
+    if request.method=='POST':
+        serializer = ProductSerializer(data=request.data)
+        # روش ۱
+        # که استفاده نمیکنیم هیچ وقت
+        # if serializer.is_valid():
+        #     pass
+        # else:
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # روش ۲
+        serializer.is_valid(raise_exception=True)
+        return Response('OK')
 
 
 @api_view()
