@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from .models import Category, Discount, Product
-from .serializers import CategorySerializer, DiscountSerializer, ProductSerializer
+from .serializers2 import CategorySerializer, DiscountSerializer, ProductSerializer
 
 
 def printype(s):
