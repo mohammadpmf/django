@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Category, Product
+from .models import Category, Product, Discount
 
 
 TAX_RATE = Decimal(1.10)
@@ -13,11 +13,27 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title', 'description', 'num_of_products']
     
-    num_of_products = serializers.SerializerMethodField()
+    num_of_products = serializers.SerializerMethodField(read_only=True)
 
     def get_num_of_products(self, category:Category):
         # return category.products.count() # توضیحات کامل رو تو فایل ویوز.پای قسمت مربوطه بخوونم.
-        return category.products_count
+        # return category.products_count
+        # اما نکته ای که داره اینه که موقعی که یه کتگوری میسازیم، ساختنش تو دیتابیس انجام میشه
+        # با این حال به ما ارور میده که
+        # 'Category' object has no attribute 'products_count'
+        # حتی با این که ما تو جیسون نفرستیم این رو. دلیلش اینه که موقع پست، بعد از ذخیره کردن بهش
+        # گفتیم که بیا سریالایزر.دیتا رو نشون بده که خب برای نمایشش، میاد اطلاعات رو بگیره که اینور
+        # بهش گفتیم پروداکتس کَونت رو بهش بده. اما موقعی که متد گت نیست، احتمالا نمیاد سریالایزر
+        # رو مطابق چیزی که تو این کلاس کتگوری سریالایزر ما بهش گفتیم و فیلدز رو بهش دادیم
+        # درست کنه. به خاطر همین به مشکل میخوره. حالا دلیلش خیلی مهم نیست اما با ترای و اکسپت
+        # حلش میکنیم. میگیم سعی کن که اون رو بدی که یه هیت کمتر به دیتابیس بزنی. اگه مثل حالت
+        # عادی شد که خوبه. اما اگه نشد میگیم یه کوئری دیگه بزن برو تعدادش رو هم بگیر و بعد بیا
+        # بهمون نشون بده به اسم همین نام آو پروداکتز یعنی این شکلی میشه کدها
+        try:
+            return category.products_count
+        except AttributeError:
+            return category.products.count()
+
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -73,6 +89,7 @@ class ProductSerializer(serializers.ModelSerializer):
     #     return instance
 
 
-class DiscountSerializer(serializers.Serializer):
-    discount = serializers.FloatField()
-    description = serializers.CharField(max_length=255)
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = ['discount', 'description']

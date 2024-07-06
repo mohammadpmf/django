@@ -1,8 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-# from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 
@@ -18,22 +17,22 @@ class HomePage(APIView):
     def get(self, request):
         return Response('Hi')
 
-
-# اگه بخوایم توانایی تغییر نداشته باشه و فقط بتونه بخونه اطلاعات رو، از رید آنلی مدل ویو ست استفاده
-# میکنیم. یعنی این رو ایمپورت میکنیم از همونجایی که مدل ویو ست رو آوردیم و از این ارث بری میکنیم
-# ReadOnlyModelViewSet
-# این طوری دیگه کارهای تغییرش وجود ندارند و فقط برای ما لیست ویو و دیتیل ویو رو میاره.
-# برای تخفیف ها که خودش نذاشته بود و خودم اضافه گذاشته بودم این رو گذاشتم. یعنی تخفیف ها رو فقط
-# الان میشه دید. ویرایش و حذف و ایجاد ندارن.
-class ProductViewSet(ModelViewSet):
-    model = Product
+class ProductList(ListCreateAPIView):
+    # def get_serializer_class(self):
+    #     return ProductSerializer
+    # def get_queryset(self):
+    #     return Product.objects.all().select_related('category').order_by('id')
     serializer_class = ProductSerializer
     queryset = Product.objects.all().select_related('category').order_by('id')
     
     def get_serializer_context(self):
         return {'request': self.request}
 
-    # فرقش با قبلی اینه که اینجا اسمش رو باید دیستروی بذاریم به جای دیلیت
+
+class ProductDetail(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.select_related('category')
+
     def delete(self, request, pk):
         product = get_object_or_404(Product.objects.select_related('category'), pk=pk)
         if product.order_items.count()>0:
@@ -41,9 +40,15 @@ class ProductViewSet(ModelViewSet):
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class CategoryViewSet(ModelViewSet):
+
+class CategoryList(ListCreateAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all().annotate(products_count=Count('products'))
+
+
+class CategoryDetail(RetrieveUpdateDestroyAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.annotate(products_count=Count('products'))
 
     def delete(self, request, pk):
         category = get_object_or_404(Category.objects.annotate(products_count=Count('products')), pk=pk)
@@ -55,6 +60,11 @@ class CategoryViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class DiscountViewSet(ReadOnlyModelViewSet):
+class DiscountList(ListCreateAPIView):
+    serializer_class = DiscountSerializer
+    queryset = Discount.objects.all()
+
+
+class DiscountDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = DiscountSerializer
     queryset = Discount.objects.all()
