@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, Comment, Discount, Product
@@ -30,8 +30,9 @@ class HomePage(APIView):
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all().select_related('category').order_by('id')
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     ordering_fields = ['name', 'unit_price', 'inventory']
+    search_fields = ['name', 'category__title']
     # filterset_fields = ['category', 'inventory']
     filterset_class = ProductFilter
     
