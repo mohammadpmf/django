@@ -34,9 +34,31 @@
 
 
 # ********************************************************************************************************
+# from django.urls import path, include
+# from rest_framework.routers import SimpleRouter, DefaultRouter
+# # دیفالت میاد صفحه اولیه هم که همه لینک ها رو داره درست میکنه
+
+# from . import views
+
+# router = DefaultRouter()
+# router.register('products', views.ProductViewSet, basename='product') # => product-list | product-detail
+# router.register('categories', views.CategoryViewSet, basename='category') # => category-list | category-detail
+# router.register('discounts', views.DiscountViewSet, basename='discount') # => discount-list | discount-detail
+# router.register('comments', views.CommentViewSet, basename='comment') # => comment-list | comment-detail
+# # urlpatterns = router.urls
+# urlpatterns = [
+#     path('', include(router.urls)),
+# ]
+# ********************************************************************************************************
+
+
+# ********************************************************************************************************
 from django.urls import path, include
-from rest_framework.routers import SimpleRouter, DefaultRouter
-# دیفالت میاد صفحه اولیه هم که همه لینک ها رو داره درست میکنه
+# برای این که بتونیم به صورت نستد هم نشون بدیم. مثلا تو محصولات هستیم بریم تو محصول ۲۵۴
+# اونجا بریم تو قسمت کامنت هاش و اونجا بریم سراغ کامنت ۵۴
+# از پکیج نستد رَونتر استفاده میکنیم.
+# pip install drf-nested-routers
+from rest_framework_nested.routers import DefaultRouter, NestedDefaultRouter
 
 from . import views
 
@@ -44,7 +66,11 @@ router = DefaultRouter()
 router.register('products', views.ProductViewSet, basename='product') # => product-list | product-detail
 router.register('categories', views.CategoryViewSet, basename='category') # => category-list | category-detail
 router.register('discounts', views.DiscountViewSet, basename='discount') # => discount-list | discount-detail
-urlpatterns = router.urls
+products_router = NestedDefaultRouter(router, 'products', lookup='product')
+products_router.register('comments', views.CommentViewSet, basename='product-comment')
+
+urlpatterns = router.urls + products_router.urls
 # urlpatterns = [
 #     path('', include(router.urls)),
+#     path('', include(products_router.urls)),
 # ]

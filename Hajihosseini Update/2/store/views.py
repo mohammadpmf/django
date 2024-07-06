@@ -6,8 +6,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 
-from .models import Category, Discount, Product
-from .serializers2 import CategorySerializer, DiscountSerializer, ProductSerializer
+from .models import Category, Comment, Discount, Product
+from .serializers2 import CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer
 
 
 def printype(s):
@@ -26,15 +26,21 @@ class HomePage(APIView):
 # برای تخفیف ها که خودش نذاشته بود و خودم اضافه گذاشته بودم این رو گذاشتم. یعنی تخفیف ها رو فقط
 # الان میشه دید. ویرایش و حذف و ایجاد ندارن.
 class ProductViewSet(ModelViewSet):
-    model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all().select_related('category').order_by('id')
+    # queryset = Product.objects.all().select_related('category').order_by('id')
+    
+    def get_queryset(self):
+        query_set = Product.objects.all()
+        category_id_parameter = self.request.query_params.get('category_id')
+        if category_id_parameter:
+            query_set = query_set.filter(category_id=category_id_parameter)
+        return query_set
     
     def get_serializer_context(self):
         return {'request': self.request}
 
     # فرقش با قبلی اینه که اینجا اسمش رو باید دیستروی بذاریم به جای دیلیت
-    def delete(self, request, pk):
+    def destroy(self, request, pk):
         product = get_object_or_404(Product.objects.select_related('category'), pk=pk)
         if product.order_items.count()>0:
             return Response({'error': 'This product is in some order items. Delete them first and then come back😊'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -58,3 +64,16 @@ class CategoryViewSet(ModelViewSet):
 class DiscountViewSet(ReadOnlyModelViewSet):
     serializer_class = DiscountSerializer
     queryset = Discount.objects.all()
+
+
+class CommentViewSet(ModelViewSet):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        product_pk = self.kwargs.get('product_pk') # از کجا میدونیم وجود داره؟
+        # خودمون توی یو آر الز بهش گفتیم که لوکاپ = پروداکت باشه. پس برامون پروداکت آندراسکور پی کی
+        # رو میفرسته.
+        return Comment.objects.filter(product_id=product_pk)
+    
+    def get_serializer_context(self):
+        return {'product_pk': self.kwargs.get('product_pk')}

@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Category, Product, Discount
+from .models import Category, Comment, Product, Discount
 
 
 TAX_RATE = Decimal(1.10)
@@ -93,3 +93,13 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = ['discount', 'description']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'name', 'body']
+    
+    def create(self, validated_data):
+        product_id = self.context.get('product_pk')
+        return Comment.objects.create(product_id=product_id, **validated_data)
