@@ -1,11 +1,12 @@
+from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import get_object_or_404
-from django.db.models import Count
 
 from .models import Category, Comment, Discount, Product
 from .serializers2 import CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer
@@ -29,7 +30,8 @@ class HomePage(APIView):
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all().select_related('category').order_by('id')
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = ['name', 'unit_price', 'inventory']
     # filterset_fields = ['category', 'inventory']
     filterset_class = ProductFilter
     
