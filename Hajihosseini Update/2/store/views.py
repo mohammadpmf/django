@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 
@@ -27,14 +28,22 @@ class HomePage(APIView):
 # الان میشه دید. ویرایش و حذف و ایجاد ندارن.
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
-    # queryset = Product.objects.all().select_related('category').order_by('id')
+    queryset = Product.objects.all().select_related('category').order_by('id')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'inventory']
     
-    def get_queryset(self):
-        query_set = Product.objects.all()
-        category_id_parameter = self.request.query_params.get('category_id')
-        if category_id_parameter:
-            query_set = query_set.filter(category_id=category_id_parameter)
-        return query_set
+    # این کوئری ست که پایین نوشتم، برای اینه که بر اساس چیزهای خاص فیلتر کنیم. اما خودمون
+    # بخوایم همه چیز رو بنویسیم پیر میشیم. با دستور pip install django-filter
+    # پکیجش رو نصب میکنیم و ازش استفاده میکنیم (یادم نره تو ستینگز هم django_filters رو قبل از
+    # rest_framework اضافه کنم که بشناستش) این طوری دیگه لازم نیست دوباره برای کوئری ست تابع تعریف کنیم
+    # و همون متغیر queryset کافی هست. فقط چند تا متغیر ساده دیگه هم باید تعریف کنیم که بالا نوشتم 
+    # def get_queryset(self):
+    #     query_set = Product.objects.all()
+    #     category_id_parameter = self.request.query_params.get('category_id')
+    #     if category_id_parameter:
+    #         query_set = query_set.filter(category_id=category_id_parameter)
+    #     return query_set
+
     
     def get_serializer_context(self):
         return {'request': self.request}
