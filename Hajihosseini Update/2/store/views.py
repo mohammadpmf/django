@@ -9,7 +9,7 @@ from django.db.models import Count
 
 from .models import Category, Comment, Discount, Product
 from .serializers2 import CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer
-
+from .filters import ProductFilter
 
 def printype(s):
     print(s, type(s))
@@ -30,7 +30,8 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all().select_related('category').order_by('id')
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category', 'inventory']
+    # filterset_fields = ['category', 'inventory']
+    filterset_class = ProductFilter
     
     # این کوئری ست که پایین نوشتم، برای اینه که بر اساس چیزهای خاص فیلتر کنیم. اما خودمون
     # بخوایم همه چیز رو بنویسیم پیر میشیم. با دستور pip install django-filter
