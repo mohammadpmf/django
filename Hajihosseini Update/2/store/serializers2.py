@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Category, Comment, Product, Discount
+from .models import Cart, CartItem, Category, Comment, Product, Discount
 
 
 TAX_RATE = Decimal(1.10)
@@ -103,3 +103,69 @@ class CommentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         product_id = self.context.get('product_pk')
         return Comment.objects.create(product_id=product_id, **validated_data)
+
+
+class CartProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'unit_price']
+
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
+
+
+class AddCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['id', 'product', 'quantity']
+
+    def create(self, validated_data):
+        cart_id = self.context.get('cart_pk')
+        product=validated_data.get('product')
+        quantity=validated_data.get('quantity')
+        try:
+            cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product.id)
+            cart_item.quantity += quantity
+            cart_item.save()
+        except CartItem.DoesNotExist:
+            cart_item = CartItem.objects.create(cart_id=cart_id, **validated_data)
+        self.instance = cart_item # این خط برای حرفه ای تر بودن هست و خودش از تو داکیومنتیشن جنگو خوونده بود. منم فعلا بذارم ایشالله بعدا متوجه میشم😊
+        return cart_item
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['id', 'product', 'quantity', 'item_total_price']
+
+    product=CartProductSerializer()
+    item_total_price=serializers.SerializerMethodField()
+
+    def get_item_total_price(self, cart_item: CartItem):
+        return cart_item.quantity * cart_item.product.unit_price
+
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['id', 'items', 'total_price']
+        read_only_fields = ['id']
+    
+    items=CartItemSerializer(many=True, read_only=True)
+    total_price = serializers.SerializerMethodField()
+
+    def get_total_price(self, cart: Cart):
+        # s = 0
+        # for item in cart.items.all():
+        #     item: CartItem
+        #     t = item.product.unit_price * item.quantity
+        #     s+=t
+        # return s
+        return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
+
+    # id = serializers.UUIDField(read_only=True) # به جای این که تعریف کنیم دوباره و رید آنلی کنیم میشه تو 
+    # متغیر رید آنلی فیلدز کلاس متا نوشت این رو.
+        

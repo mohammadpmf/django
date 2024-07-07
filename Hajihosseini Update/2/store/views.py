@@ -4,12 +4,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Category, Comment, Discount, Product
-from .serializers2 import CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer
+from .models import Cart, CartItem, Category, Comment, Discount, Product
+from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
 
@@ -97,3 +98,46 @@ class CommentViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'product_pk': self.kwargs.get('product_pk')}
+
+
+class CartItemViewSet(ModelViewSet):
+    http_method_names = ['get', 'post', 'patch', 'delete'] # این طوری دیگه نمیذاریم پوت بکنه 😂
+    # بر خلاف کارت ویو ست که از چند چیز ارث بری کردیم، این مدلی نوشتن هم قشنگ تر و هم ساده تر و
+    # هم اصولی تره. اما به هر حال گذاشتم که داشته باشم و مفهومی کار کنم به قول خودش.
+    # http_method_names = ['get', 'head', 'options', 'post', 'patch', 'delete']
+
+    def get_queryset(self):
+        cart_pk = self.kwargs.get('cart_pk')
+        return CartItem.objects.filter(cart_id=cart_pk).select_related('product')
+    
+    def get_serializer_class(self):
+        if self.request.method=='POST':
+            return AddCartItemSerializer
+        if self.request.method=='PATCH':
+            return UpdateCartItemSerializer
+        return CartItemSerializer
+    
+    def get_serializer_context(self):
+        return {'cart_pk': self.kwargs.get('cart_pk')}
+
+# class CartViewSet(ModelViewSet):
+#     serializer_class = CartSerializer
+#     queryset = Cart.objects.all()
+# نمیخواستیم که بشه آپدیت و دیلیت انجام داد. پس به جای مدل ویو ست که از ۶ چیز ارث بری میکرد،
+# اون هایی که میخواستیم رو آوردیم و اضافه کردیم. برای این که کسی نتونه کل سبدهای خرید رو هم ببینه،
+# لیست رو هم نیاوردیم یعنی الان که وارد لینک مربوط به لیست ویوش میشیم میگه اجازه نداری ببینی
+# اما میتونیم بسازیم. وارد جزییات یه دونه تک سبد خرید میتونیم بشیم. دیلیت و آپدیت هم نداره با
+# توجه به ۳ کلاسی که ایمپورت کردیم.
+class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
+    serializer_class = CartSerializer
+    queryset = Cart.objects.all().prefetch_related('items__product')
+
+    # این برای این بود که اگه کسی تو یو آر ال دستکاری میکرد تو زمان ضبط فیلم بهش ارور میداد
+    # و خودش رجکس تعریف کرده بود. اما مال من ارور نمیداد. خودش هم به عنوان مطلب اضافه گفته بود
+    # و آخرش پاک کرده بود. خلاصه این وقتی این رو گذاشتیم اگه اون یو یو آی دی ۳۲ کاراککتری مبنای ۱۶
+    # نبود صفحه ۴۰۴ رو برمیگردوند. الان خودش تو آپدیت های جنگو و بقیه پکیج ها درست شده و لازم نیست
+    # نوشته بشه.
+    # lookup_value_regex = '[0-9a-fA-F]{8}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{12}'
+
+
+                   

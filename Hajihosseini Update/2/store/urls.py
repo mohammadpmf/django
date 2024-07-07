@@ -67,10 +67,13 @@ router.register('products', views.ProductViewSet, basename='product') # => produ
 router.register('categories', views.CategoryViewSet, basename='category') # => category-list | category-detail
 router.register('discounts', views.DiscountViewSet, basename='discount') # => discount-list | discount-detail
 products_router = NestedDefaultRouter(router, 'products', lookup='product')
-products_router.register('comments', views.CommentViewSet, basename='product-comment')
-
-urlpatterns = router.urls + products_router.urls
-# urlpatterns = [
-#     path('', include(router.urls)),
-#     path('', include(products_router.urls)),
-# ]
+products_router.register('comments', views.CommentViewSet, basename='product-comments')
+router.register('carts', views.CartViewSet, basename='cart') # => cart-list | cart-detail
+cart_items_router = NestedDefaultRouter(router, 'carts', lookup='cart')
+cart_items_router.register('items', views.CartItemViewSet, basename='cart-items')
+# urlpatterns = router.urls + products_router.urls + cart_items_router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+    path('', include(products_router.urls)),
+    path('', include(cart_items_router.urls)),
+]
