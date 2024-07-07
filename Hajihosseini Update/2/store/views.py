@@ -11,6 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Category, Comment, Discount, Product
 from .serializers2 import CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer
 from .filters import ProductFilter
+from .paginations import ProductPagination
 
 def printype(s):
     print(s, type(s))
@@ -35,6 +36,12 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['name', 'category__title']
     # filterset_fields = ['category', 'inventory']
     filterset_class = ProductFilter
+    # برای پجینیشن، اگه تو ستینگز و داخل دیکشنری رست فریم ورک اونا رو اضافه کنیم، برای همه اعمال
+    # میشه و لازم نیست کاری بکنیم. اما میتونیم اینجا متغیر زیر رو تعریف کنیم و وصلش کنیم به کد
+    # خودمون که برای هر ویویی جدا باشه. این شکلی اینجا نوشتم و داخل فایل پجینیشنز.پای کلاسش رو
+    pagination_class = ProductPagination
+    # حتی میشه تو ستینگز دیفالت رو هم گذاشت و برای هر ویویی، پجینیشن جداگانه هم تعریف کرد که اگه
+    # جایی نگفتیم از دیفالت استفاده کنه و اگه گفتیم از مال ما.
     
     # این کوئری ست که پایین نوشتم، برای اینه که بر اساس چیزهای خاص فیلتر کنیم. اما خودمون
     # بخوایم همه چیز رو بنویسیم پیر میشیم. با دستور pip install django-filter
