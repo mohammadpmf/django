@@ -195,9 +195,10 @@ class CustomerAdmin(admin.ModelAdmin):
     def email(self,customer: Customer):
         return customer.user.email
     
-    def full_name(self,customer: Customer):
-        return f"{customer.user.first_name} {customer.user.last_name}"
-
+    # def full_name(self,customer: Customer):
+    #     return f"{customer.user.first_name} {customer.user.last_name}"
+    # با تعریف پراپرتی فول نیم در کلاس کاستومر، دیگه لازم نیست اینجا بنویسیمش میشد برای فرست نیم و
+    # لست نیم و ایمیل هم این کار رو کرد. ولی انجام ندادم که هر دو مدل رو داشته باشم و بلد باشم.
 
 
 @admin.register(OrderItem)
