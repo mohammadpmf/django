@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # third party apps
     'django_filters',
     'rest_framework',
+    'djoser', # بعد از رست فریم ورک اضافه اش میکنیم.
     'debug_toolbar',
 
     # my apps
@@ -159,6 +160,13 @@ REST_FRAMEWORK = {
     # رو تو ویوز و فایل مربوط به پجینیشن مینویسیم و اونجا توضیح میدم. اینا رو دیگه کامنت میکنم.
     # 'PAGE_SIZE': 10,
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ],
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT', ),
 }
 
 AUTH_USER_MODEL='core.CustomUser'
