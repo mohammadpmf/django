@@ -170,18 +170,34 @@ class CommentAdmin(admin.ModelAdmin):
     # و بین چیزهای زیاد بیایم حرفه ای سرچ کنیم. و وقتی که من ۲ تا گذاشتم یا icontains با ۲ تا گذاشتم
     # جواب نمیداد بهم. اما وقتی یه دونه اش کردم درست شد و کار میکرد به درستی
 
-
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'full_name', 'email', 'phone_number']
-    list_display_links = ['first_name', 'last_name', 'full_name', 'email', 'phone_number']
+    list_display = ['first_name', 'last_name', 'full_name', 'email', 'phone_number'] # برای لیست دیسپلی نمیتونه از لوکاپ استفاده کنه. به جاش براش پایین تر تابع نوشتیم که بره از خود یوزر اطلاعاتش رو در بیاره. ۳ قسمتی رو که بعد از تغییر مدل و تبدیل به وان تو وان فیلد کاستومر به یوزر انجام دادیم رو این کار رو کردم.
+    list_display_links = ['first_name', 'last_name', 'full_name', 'email', 'phone_number'] # توضحیات مثل بالایی
     list_per_page = 50
-    ordering = ['last_name', 'first_name']
-    search_fields = ['last_name__istartswith', 'first_name__istartswith']
+    ordering = ['user__last_name', 'user__first_name']
+    search_fields = ['user__last_name__istartswith', 'user__first_name__istartswith']
 
-    @admin.display(ordering='first_name', description='نام کامل') # اگه بخوایم اسم ستونی که گذاشته رو عوض کنیم از دیکریپشن استفاده میکنیم.
-    def full_name(self, customer: Customer):
-        return f"{customer.first_name} {customer.last_name}"
+    # @admin.display(ordering='user__first_name', description='نام کامل') # اگه بخوایم اسم ستونی که گذاشته رو عوض کنیم از دیسکریپشن استفاده میکنیم.
+    # def full_name(self, customer: Customer):
+    #     return f"{customer.user.first_name} {customer.user.last_name}"
+
+    # بعد از این که مدل کاستومر رو عوض کردیم و وان تو وان زدیم به یوزر و نام و نام خانوادگی و ایمیل
+    # رو حذف کردیم (چون تو یوزر بودند)، اینجا دیگه اونا رو نمیشناسه و برای این که توی لیست دیسپلی
+    # و لیست دیسپلی لیسنکس بشه نمایششون داد، لوکاپ نوشتن جواب نمیده. این تابع ها رو تعریف کردیم که
+    # بتونه اطلاعات رو از تو یوزر در بیاره و داخل کاستومرادمین نمایش بده.
+    def first_name(self,customer: Customer):
+        return customer.user.first_name
+    
+    def last_name(self,customer: Customer):
+        return customer.user.last_name
+
+    def email(self,customer: Customer):
+        return customer.user.email
+    
+    def full_name(self,customer: Customer):
+        return f"{customer.user.first_name} {customer.user.last_name}"
+
 
 
 @admin.register(OrderItem)
