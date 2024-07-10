@@ -9,3 +9,4 @@ from .models import Customer
 def create_customer_profile_for_newly_created_user(sender, instance, created, **kwargs):
     if created:
         Customer.objects.create(user=instance)
+# برای شناسوندن سیگنال یادم نره که تو فایل اپس.پای داخل تابع ردی اضافه اش بکنم.
