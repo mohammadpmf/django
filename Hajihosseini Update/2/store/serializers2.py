@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.utils.text import slugify
+from django.db import transaction
 from rest_framework import serializers
 
 from .models import Cart, CartItem, Category, Comment, Customer, Order, OrderItem, Product, Discount
@@ -225,3 +226,74 @@ class OrderForAdminSerializer(serializers.ModelSerializer):
     
     customer = OrderCustomerSerializer()
     items = OrderItemSerializer(many=True)
+
+
+class OrderUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+
+class OrderCreateSerializer(serializers.Serializer):
+    cart_id = serializers.UUIDField()
+
+    @transaction.atomic()
+    def save(self, **kwargs):
+        cart_id = self.validated_data.get('cart_id')
+        user_id = self.context.get('user_id')
+        customer = Customer.objects.get(user_id=user_id)
+
+        order = Order()
+        order.customer = customer
+        order.save()
+        cart_items = CartItem.objects.select_related('product').filter(cart_id=cart_id)
+
+        order_items = []
+        for cart_item in cart_items:
+            order_item = OrderItem()
+            order_item.order=order
+            order_item.product_id=cart_item.product_id # برای این که آبجکت ها رو هی پاس ندیم سنگین نشه، آی دی هاشونو فقط دادیم
+            order_item.quantity=cart_item.quantity
+            order_item.unit_price=cart_item.product.unit_price
+            order_items.append(order_item)
+        # به جای این که دونه دونه تابع سیو رو روی هر کودوم از اردرآیتم ها صدا کنیم، همه رو 
+        # ریختیم داخل یه لیست و آخر سر از تابع بالک کریت منیجر استفاده کردیم که به جای ۱۰ تا یا ۲۰
+        # تا درخواست، همه رو با یه درخواست به دیتابیس میگه.
+
+        # اگه دوست داشتیم، میشه با لیست کامپرهنشن هم این شکلی درستش کرد.
+        # order_items=[
+        #     OrderItem(
+        #         order=order,
+        #         product=cart_item.product,
+        #         unit_price=cart_item.product.unit_price,
+        #         quantity=cart_item.quantity
+        #     ) for cart_item in cart_items
+        # ]
+
+        OrderItem.objects.bulk_create(order_items)
+        Cart.objects.get(id=cart_id).delete()
+        return order
+
+    # برای ولیدیت کردن یک فیلد خاص از سریالایزری که میسازیم، تابعی باید بنویسیم که با ولیدیت
+    # شروع بشه و یه آندراسکور بذاریم و بعدش اسم فیلد رو بنویسیم. الان ما میخوایم بررسی کنیم که
+    # یه سبد خرید خالی نباشه. پس میخوایم ولیدیتش کنیم. پس این تابع رو نوشتیم.
+    def validate_cart_id(self, cart_id):
+        if not Cart.objects.filter(id=cart_id).exists():
+            raise serializers.ValidationError('There is no cart with cart id %s' %cart_id)
+        # اگه وجود نداشت که ارور دادیم بهش. اگه وجود داشت باید ببینیم داخلش آیتم هست یا نه
+        if CartItem.objects.filter(cart_id=cart_id).count==0:
+            raise serializers.ValidationError('Your cart is empty. Please add some products first!')
+        # اگه خالی بود که ارور دادیم بهش. اگه نه که سبد خرید اوکی هست و یه خریدی هم کرده
+        return cart_id
+        # تعداد کوئری ها این جا دو تاست تو این حالت. اما بهترش میکنیم و تو پایینی با یه کوئری مینویسیم
+        # البته تو پایینی هم پریفچ ریلیتد باعث میشه ۲ تا کوئری داشته باشیم. اما کلا یه کوئری اینجا
+        # براش نوشتیم و روی کارت فقط کار کردیم. به هر حال هر کودوم یه روش هست دیگه.
+
+    def validate_cart_id(self, cart_id):
+        try:
+            if Cart.objects.prefetch_related('items').get(id=cart_id).items.count() == 0:
+                raise serializers.ValidationError('Your cart is empty. Please add some products first!')
+        except Cart.DoesNotExist:
+            raise serializers.ValidationError('There is no cart with cart id %s' %cart_id)
+        return cart_id
+

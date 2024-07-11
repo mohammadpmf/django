@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, D
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Cart, CartItem, Category, Comment, Customer, Discount, Order, OrderItem, Product
-from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, OrderForAdminSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
+from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, OrderCreateSerializer, OrderForAdminSerializer, OrderSerializer, OrderUpdateSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
 from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission, IsAdminUserOrWhoHasOrdered
@@ -217,12 +217,19 @@ class CustomerViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
+    http_method_names = ['post', 'get', 'head', 'options', 'patch', 'delete'] # پوت رو نمیخوایم بدیم.
     # serializer_class=OrderSerializer # چون پیچیده تر میشه از متدش استفاده میکنیم به جای مقدار دادن به متغیر
     # queryset = Order.objects.all().select_related('customer').prefetch_related('items__product') # این کوئری خوب هست. اما پایینی
     # که تو متد گت کوئری ست نوشتیم خیلی خفن تره و روی همون هم اینر جوین میزنه و باز هم دستور بهینه
     # تری برای ارتباط با دیتابیس مینویسه. علاوه بر این که اگه چند لایه باشه باز هم بهینه تر هست
     # نسبت به این مدلی که بالا نوشتیم.
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated] این هم چون میخوایم کاملتر بنویسیم تابعش رو اوراید میکنیم.
+    # فقط دقت کنم که اسم تابعش گت پرمیشنز هست. نه گت پرمیشن کلسز. پس چون خود پرمیشن ها رو میخواد
+    # و نه کلاس اونها رو، موقع ریترن کردن ازشون یک شیئ میسازیم یعنی همون پرانتز باز و بسته رو میذاریم
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE']:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         query_set = Order.objects.all().select_related('customer__user').prefetch_related(
@@ -237,6 +244,20 @@ class OrderViewSet(ModelViewSet):
         return query_set.filter(customer__user_id=user.id)
     
     def get_serializer_class(self):
+        if self.request.method=='POST':
+            return OrderCreateSerializer
+        if self.request.method=='PATCH':
+            return OrderUpdateSerializer
         if self.request.user.is_staff:
             return OrderForAdminSerializer
         return OrderSerializer
+    
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}
+    
+    def create(self, request, *args, **kwargs):
+        create_order_serializer = OrderCreateSerializer(data=request.data, context={'user_id': self.request.user.id})
+        create_order_serializer.is_valid(raise_exception=True)
+        created_order = create_order_serializer.save()
+        serializer = OrderSerializer(created_order)
+        return Response(serializer.data)
