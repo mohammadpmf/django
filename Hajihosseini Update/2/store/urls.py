@@ -72,6 +72,7 @@ router.register('carts', views.CartViewSet, basename='cart') # => cart-list | ca
 cart_items_router = NestedDefaultRouter(router, 'carts', lookup='cart')
 cart_items_router.register('items', views.CartItemViewSet, basename='cart-items')
 router.register('customers', views.CustomerViewSet, basename='customer') # => customer-list | customer-detail
+router.register('orders', views.OrderViewSet, basename='order') # => order-list | order-detail
 # urlpatterns = router.urls + products_router.urls + cart_items_router.urls
 urlpatterns = [
     path('', include(router.urls)),

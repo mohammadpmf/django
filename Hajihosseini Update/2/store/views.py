@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,11 +10,11 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyM
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Cart, CartItem, Category, Comment, Customer, Discount, Product
-from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Category, Comment, Customer, Discount, Order, OrderItem, Product
+from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, OrderForAdminSerializer, OrderSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
-from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
+from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission, IsAdminUserOrWhoHasOrdered
 
 def printype(s):
     print(s, type(s))
@@ -214,3 +214,29 @@ class CustomerViewSet(ModelViewSet):
     # مثلا تو فایل پرمیشنز.پای، اون دو خط اول رو گذاشتم و دیدم که به کسی که ادمین هم باشه اجازه
     # دسترسی نمیده. حالا میشه شرط ها شو جا به جا کرد دیگه. صرفا جهت تست بود. وگرنه که درستش اینه
     # که ادمین به همه چی دسترسی داشته باشه.
+
+
+class OrderViewSet(ModelViewSet):
+    # serializer_class=OrderSerializer # چون پیچیده تر میشه از متدش استفاده میکنیم به جای مقدار دادن به متغیر
+    # queryset = Order.objects.all().select_related('customer').prefetch_related('items__product') # این کوئری خوب هست. اما پایینی
+    # که تو متد گت کوئری ست نوشتیم خیلی خفن تره و روی همون هم اینر جوین میزنه و باز هم دستور بهینه
+    # تری برای ارتباط با دیتابیس مینویسه. علاوه بر این که اگه چند لایه باشه باز هم بهینه تر هست
+    # نسبت به این مدلی که بالا نوشتیم.
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        query_set = Order.objects.all().select_related('customer__user').prefetch_related(
+            Prefetch(
+                'items',
+                queryset=OrderItem.objects.select_related('product')
+                )
+            )
+        user = self.request.user
+        if user.is_staff:
+            return query_set
+        return query_set.filter(customer__user_id=user.id)
+    
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return OrderForAdminSerializer
+        return OrderSerializer

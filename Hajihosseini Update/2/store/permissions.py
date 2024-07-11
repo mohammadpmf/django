@@ -18,12 +18,17 @@ class SendPrivateEmailToCustomerPermission(permissions.BasePermission):
 
 
 import copy
-print(permissions.DjangoModelPermissions().perms_map['GET'])
+# print(permissions.DjangoModelPermissions().perms_map['GET'])
 class CustomDjangoModelPermissions(permissions.DjangoModelPermissions):
     def __init__(self) -> None:
         self.perms_map = copy.deepcopy(self.perms_map) # برای این که تو حافظه به یه جا اشاره میکنن و
         # این طوری کلا خرابکاری میشه و برای این که این اتفاق نیفته، یه کپی از اون رو ذخیره میکنیم.
         # نکته مهمی هست. دقت کنم.
         self.perms_map['GET']=['%(app_label)s.view_%(model_name)s']
-print(CustomDjangoModelPermissions().perms_map['GET'])
-print(permissions.DjangoModelPermissions().perms_map['GET'])
+# print(CustomDjangoModelPermissions().perms_map['GET'])
+# print(permissions.DjangoModelPermissions().perms_map['GET'])
+
+
+class IsAdminUserOrWhoHasOrdered(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_staff)

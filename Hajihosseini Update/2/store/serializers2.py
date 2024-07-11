@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Cart, CartItem, Category, Comment, Customer, Product, Discount
+from .models import Cart, CartItem, Category, Comment, Customer, Order, OrderItem, Product, Discount
 
 
 TAX_RATE = Decimal(1.10)
@@ -180,3 +180,48 @@ class CustomerSerializer(serializers.ModelSerializer):
         # اما خب چه کاریه که الکی بی دقتی کنیم. کد رو درست بنویسم از اول که تو شرایط خاص به مشکل نخوره.
         # مثلا اگه یوزری از اول وجود داشته که به هیچ کاستومری وصل نیست. بعد میشه اینجا کاستومر رو
         # تغییر داد. خلاصه این که مشکلی نذاریم که ذهن آدم های مریض انگولک بشه که خرابکاری بکنن.
+
+
+
+
+
+class OrderItemProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'unit_price']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'quantity', 'purchased_price']
+
+    product = OrderItemProductSerializer()
+    purchased_price = serializers.DecimalField(max_digits=6, decimal_places=2, source='unit_price')
+
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id', 'first_name', 'last_name', 'email']
+    
+    first_name = serializers.CharField(max_length=255, source='user.first_name')
+    last_name = serializers.CharField(max_length=255, source='user.last_name')
+    email = serializers.CharField(max_length=255, source='user.email')
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id', 'datetime_created', 'status', 'items']
+    
+    items = OrderItemSerializer(many=True)
+
+
+class OrderForAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id', 'customer', 'datetime_created', 'status', 'items']
+    
+    customer = OrderCustomerSerializer()
+    items = OrderItemSerializer(many=True)
