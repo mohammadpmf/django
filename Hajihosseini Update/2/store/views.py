@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Cart, CartItem, Category, Comment, Customer, Discount, Product
@@ -143,6 +144,11 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
 class CustomerViewSet(ModelViewSet):
     serializer_class=CustomerSerializer
     queryset = Customer.objects.all()
+    permission_classes = [IsAdminUser] # این پرمیشن کلس برای کل کلاس کاستومر ویو ست اعمال میشه. 
+    # خب این طوری طرف نمیتونه وارد یو آر ال (می) هم بشه. موقع تعریفش میتونیم اوجا اورایدش کنیم
+    # و بگیم که اونجا پرمیشن کلسش فرق داره که اینجا این کار رو کردیم.
+    # در واقع بهش گفتیم که اگر ادمین بود میتونه همه رو ببینه. ولی اگه خواست بره تو صفحه خودش
+    # کافیه که آثنتیکیت کرده باشه و فقط لاگین باشه.
 
     # این ویوست رو درست کردیم و تو یو آر الی که ساختیم، هم لیست ویو و هم دیتیل ویو داره.
     # ولی من نمیخوام با customers/2/ برم به پروفایل. بحث این که هر کس صفحه خودش رو ببینه بعدا
@@ -159,7 +165,7 @@ class CustomerViewSet(ModelViewSet):
     # این تابع در زیر، میتونیم به یو آر ال customers/me بریم
     from rest_framework.decorators import action
     # فقط دقت کنم که دکوریتور اکشن، خودش ارور میداد و میگفت که حتما دیتیل رو به عنوان ورودی میخواد
-    @action(detail=False, methods=['GET', 'PUT', 'PATCH'])
+    @action(detail=False, methods=['GET', 'PUT', 'PATCH'], permission_classes=[IsAuthenticated])
     def me(self, request):
         user_id = request.user.id
         customer = Customer.objects.get(user_id=user_id)

@@ -163,6 +163,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
+    # میتونیم اینجا تو ستینگز بهش دیفالت پرمیشن کلسز هم بدیم و مثلا این مدلی که بالا نوشتم، یعنی
+    # تو هر صفحه ای که میخواد بره، باید آثنتیکیتد باشه. الان نذاشتم چون جالب نمیشه. اما میشه اینجا
+    # یک سری از دیفالت ها رو داد که هر بار ننویسیم و اگه جایی لازم بود میتونیم سطح دسترسی
+    # رو تغییر بدیم.
 }
 
 from datetime import timedelta
