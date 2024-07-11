@@ -14,6 +14,7 @@ from .models import Cart, CartItem, Category, Comment, Customer, Discount, Produ
 from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
+from .permissions import IsAdminOrReadOnly
 
 def printype(s):
     print(s, type(s))
@@ -69,9 +70,19 @@ class ProductViewSet(ModelViewSet):
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all().annotate(products_count=Count('products'))
+    # میخوایم کاربرهای معمولی دسته بندی ها رو ببینن. اما نتونن پاک یا ویرایش کنن یا خودشون دسته بندی
+    # اضافه کنند. اینی که الان زیر نوشتم، ادمین باشه میتونه همه کار بکنه. اما بقیه حتی نمیتونن ببینن.
+    # permission_classes = [IsAdminUser]
+    # حالا ما میخوایم کاستوم پرمیشن درست کنیم. مثلا اسمش رو میذاریم IsAdminOrReadOnly
+    # که اگه طرف فقط برای خووندن اطلاعات اومده بود بتونه ببینه. یعنی متدهای امن گت و آپشنز و هد
+    # اما پوت و پچ و پست و دیلیت دسترسی نداره. یا این که ادمین بود. ادمین بود همه کار میتونه بکنه.
+    # تو فایل پرمیشنز.پای ای که ساختیم، درستش میکنیم و اینجا بهش میگیم که پرمیشن کلسش اونه
+    # یا اگه چند تا هستند لیست پرمیشن ها رو بهش میدیم.
+    permission_classes = [IsAdminOrReadOnly]
 
     def delete(self, request, pk):
         category = get_object_or_404(Category.objects.annotate(products_count=Count('products')), pk=pk)
