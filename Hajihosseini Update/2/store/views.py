@@ -7,14 +7,14 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Cart, CartItem, Category, Comment, Customer, Discount, Product
 from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
 def printype(s):
     print(s, type(s))
@@ -188,3 +188,18 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+    # حال میخوایم کاستوم پرمیشن رو روی پرمیشنی که خودمون تعریف کرده بودیم اعمال کنیم.
+    # مثلا برای ارسال ایمیل شخصی یه دونه پرمیشن خودمون ساخته بودیم دیگه. حالا میخوایم یو آر الش
+    # رو درست کنیم و به کسی که این اجازه رو داره دسترسی ارسال ایمیل بدیم.
+    # این دیتیل=ترو هم که نوشتیم یعنی پی کی رو میخواد. پس تو یو آر ال یه عدد به عنوان پی کی
+    # هم باید بهش بدیم.
+    @action(detail=True, permission_classes=[SendPrivateEmailToCustomerPermission])
+    def send_private_email(self, request, pk):
+        return Response(f'Sending email to customer {pk=}')
+    # این طوری به شرطی میتونه از این یو آر ال استفاده کنه که این پرمیشن رو داشته باشه یا ادمین باشه
+    # http://127.0.0.1:8000/customers/10/send_private_email/
+    # البته ادمین تمام پرمیشن ها رو داره. اما تابعی که جواب رو به ما میده دست خودمونه.
+    # مثلا تو فایل پرمیشنز.پای، اون دو خط اول رو گذاشتم و دیدم که به کسی که ادمین هم باشه اجازه
+    # دسترسی نمیده. حالا میشه شرط ها شو جا به جا کرد دیگه. صرفا جهت تست بود. وگرنه که درستش اینه
+    # که ادمین به همه چی دسترسی داشته باشه.
