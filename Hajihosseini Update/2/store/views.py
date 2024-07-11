@@ -7,14 +7,14 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny, DjangoModelPermissions
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Cart, CartItem, Category, Comment, Customer, Discount, Product
 from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
-from .permissions import IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
+from .permissions import CustomDjangoModelPermissions, IsAdminOrReadOnly, SendPrivateEmailToCustomerPermission
 
 def printype(s):
     print(s, type(s))
@@ -57,6 +57,17 @@ class ProductViewSet(ModelViewSet):
     #     if category_id_parameter:
     #         query_set = query_set.filter(category_id=category_id_parameter)
     #     return query_set
+    
+    # permission_classes = [DjangoModelPermissions]
+    # وقتی وارد کد همین جنگو مدل پرمیشن میشیم، میبینیم که برای اضافه کردن و تغییر و پاک کردن،
+    # کدی نوشته که باید اونها رو داشته باشه طرف تا بتونه تغییر بده. اما برای گرفتن اطلاعات مشکلی
+    # نیست و همه میتونن اطلاعات رو بگیرن که خب طبیعی هم هست. اما به هر حال اگه ما بخوایم که برای
+    # خووندن اطلاعات هم پرمیشن بدیم به طرف که مثل پرمیشن های دیگه باشه و R از تو CRUD جدا نباشه،
+    # کلاس کاستوم جنگو مدل پرمیشنز رو تعریف کردیم تو پرمیشنز .پای و از رو کدهای خودشون اومدیم
+    # برای خووندن اطلاعات هم گفتیم که باید اون پرمیشن رو داشته باشه. پس از گذاشتن این، اگه کسی
+    # اون پرمیشن رو نداشته باشه نمیتونه اطلاعات رو هم بخوونه. تاکید آخر که ادمین به صورت پیش فرض
+    # تمام پرمیشن ها رو داره.
+    permission_classes = [CustomDjangoModelPermissions]
 
     
     def get_serializer_context(self):
