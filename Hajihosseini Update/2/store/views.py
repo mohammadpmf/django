@@ -259,5 +259,19 @@ class OrderViewSet(ModelViewSet):
         create_order_serializer = OrderCreateSerializer(data=request.data, context={'user_id': self.request.user.id})
         create_order_serializer.is_valid(raise_exception=True)
         created_order = create_order_serializer.save()
+        # این قسمت دو خط پایین مربوط به کاستوم سیگنال خودمون هست. یعنی وقتی که اردر رو درست کردیم
+        # یه سیگنال فرستادیم. حالا اگه کسی دوست داشت وقتی شنید اس ام اس میفرسته یا ایمیل یا با ربات
+        # تلگرام پیغام میده و غیره. دوست نداشت هم استفاده نمیکنه. اما سیگنالی هست که خودمون درستش
+        # کردیم و مثل اسکرچ برادکستش کردیم.
+        from .signals import order_created
+        order_created.send_robust(self.__class__, order=created_order)
+        # تابع سند روباست ورودی اولش که اجباری هست سندر هست که کی داره میفرسته. ما بهش میگیم که کلاس
+        # OrderViewSet
+        # هست که داره میفرسته و یا دقیق ترش که اسم اپ و فایل و کلاس هست و این شکلی هست
+        # <class 'store.views.OrderViewSet'>
+        # خلاصه به هر حال میگیم این داره میفرسته و بعد از اون هر چیزی رو به صورت کیوورد آرگومان
+        # میتونیم بفرستیم. مثلا خود سفارش رو الان به اسم اردر میفرستیم که اون ور بتونیم تو اس ام اس
+        # یا ایمیل بگیم مثلا فلان چیزها رو سفارش دادی. یا مثلا کد پیگیری و غیره بفرستیم.
+        # بخش مربوط به کاستوم سیگنال تموم شد
         serializer = OrderSerializer(created_order)
         return Response(serializer.data)
