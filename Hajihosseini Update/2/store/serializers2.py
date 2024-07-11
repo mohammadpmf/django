@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Cart, CartItem, Category, Comment, Product, Discount
+from .models import Cart, CartItem, Category, Comment, Customer, Product, Discount
 
 
 TAX_RATE = Decimal(1.10)
@@ -168,4 +168,15 @@ class CartSerializer(serializers.ModelSerializer):
 
     # id = serializers.UUIDField(read_only=True) # به جای این که تعریف کنیم دوباره و رید آنلی کنیم میشه تو 
     # متغیر رید آنلی فیلدز کلاس متا نوشت این رو.
-        
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id', 'user', 'phone_number', 'birth_date']
+        read_only_fields = ['user'] # برای این که موقع تغییر اطلاعات کاربری مثل شماره تلفن و یا تاریخ
+        # تولد، اشتباها یوزرنیم رو عوض نکنه طرف.
+        # البته اگر بخواد بکنه هم به خاطر یک به یک بودن رابطه کاستومر و یوزر بهش ارور میده.
+        # اما خب چه کاریه که الکی بی دقتی کنیم. کد رو درست بنویسم از اول که تو شرایط خاص به مشکل نخوره.
+        # مثلا اگه یوزری از اول وجود داشته که به هیچ کاستومری وصل نیست. بعد میشه اینجا کاستومر رو
+        # تغییر داد. خلاصه این که مشکلی نذاریم که ذهن آدم های مریض انگولک بشه که خرابکاری بکنن.

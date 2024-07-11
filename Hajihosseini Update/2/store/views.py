@@ -9,8 +9,8 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Cart, CartItem, Category, Comment, Discount, Product
-from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Category, Comment, Customer, Discount, Product
+from .serializers2 import AddCartItemSerializer, CartItemSerializer, CartSerializer, CategorySerializer, CommentSerializer, CustomerSerializer, DiscountSerializer, ProductSerializer, UpdateCartItemSerializer
 from .filters import ProductFilter
 from .paginations import ProductPagination
 
@@ -140,4 +140,34 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     # lookup_value_regex = '[0-9a-fA-F]{8}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{4}\-?[0-9a-fA-F]{12}'
 
 
-                   
+class CustomerViewSet(ModelViewSet):
+    serializer_class=CustomerSerializer
+    queryset = Customer.objects.all()
+
+    # این ویوست رو درست کردیم و تو یو آر الی که ساختیم، هم لیست ویو و هم دیتیل ویو داره.
+    # ولی من نمیخوام با customers/2/ برم به پروفایل. بحث این که هر کس صفحه خودش رو ببینه بعدا
+    # درست میکنیم. اما میخوایم الان یه یو آر ال درست کنیم که هر کست نوشت
+    # customers/me
+    # اون رو به صفحه خودش ببره و اطلاعات خودش رو ببینه.
+    # باز هم میگم الان همه میتونن تو
+    # customers
+    # اطلاعات همه رو ببینن که درستش میکنیم. تو
+    # customers/id
+    # هم که بزنن اطلاعات تک نفر رو میبینن. اما یو آر آل دلخوای نداریم که داخل ویوست ها این طوری
+    # میتونیم یو آر ال درخواه خودمون رو تعریف کنیم. اسم تابع رو خودمون دلخواه میذاریم
+    # و دکوریتور اکشن رو قبل از تعریف تابع مینویسیم. چون اسمش رو گذاشتیم می، پس بعد از تعریف
+    # این تابع در زیر، میتونیم به یو آر ال customers/me بریم
+    from rest_framework.decorators import action
+    # فقط دقت کنم که دکوریتور اکشن، خودش ارور میداد و میگفت که حتما دیتیل رو به عنوان ورودی میخواد
+    @action(detail=False, methods=['GET', 'PUT', 'PATCH'])
+    def me(self, request):
+        user_id = request.user.id
+        customer = Customer.objects.get(user_id=user_id)
+        if request.method=='GET':
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif request.method=='PUT':
+            serializer = CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
