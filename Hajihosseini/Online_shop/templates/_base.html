@@ -10,6 +10,11 @@
 </head>
 
 <body>
+    {% if user.is_authenticated %}
+        <span>Hello {{ user }} </span> | <a href="{% url 'account_logout' %}">logout</a>
+    {% else %}
+        <a href="{% url 'account_login' %}">login</a> | <a href="{% url 'account_signup' %}">sign up</a>
+    {% endif %}
     {% block content %}{% endblock content %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
