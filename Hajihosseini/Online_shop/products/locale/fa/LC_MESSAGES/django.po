@@ -1,0 +1,122 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-14 20:38+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\models.py:24
+msgid "Very Bad"
+msgstr "خیلی بد"
+
+#: .\models.py:25
+msgid "Bad"
+msgstr "بد"
+
+#: .\models.py:26
+msgid "Normal"
+msgstr "معمولی"
+
+#: .\models.py:27
+msgid "Good"
+msgstr "خوب"
+
+#: .\models.py:28
+msgid "Perfect"
+msgstr "عالی"
+
+#: .\models.py:32
+msgid "Comment Body"
+msgstr "متن نظر"
+
+#: .\models.py:33
+msgid "Score to this product"
+msgstr "امتیاز به این محصول"
+
+#: .\templates\products\product_detail.html:22
+msgid "product detail"
+msgstr "جزییات محصول"
+
+#: .\templates\products\product_detail.html:56
+msgid "add to cart"
+msgstr "اضافه به سبد خرید"
+
+#: .\templates\products\product_detail.html:60
+msgid "categories"
+msgstr "دسته بندی ها"
+
+#: .\templates\products\product_detail.html:61
+msgid "cloth"
+msgstr "لباس"
+
+#: .\templates\products\product_detail.html:62
+msgid "summer"
+msgstr "تابستانی"
+
+#: .\templates\products\product_detail.html:63
+msgid "warm"
+msgstr "گرم"
+
+#: .\templates\products\product_detail.html:64
+msgid "women"
+msgstr "زنانه"
+
+#: .\templates\products\product_detail.html:75
+msgid "product description"
+msgstr "توضیحات محصول"
+
+#: .\templates\products\product_detail.html:78
+msgid "attributes"
+msgstr "ویژگی ها"
+
+#: .\templates\products\product_detail.html:81
+msgid "comments"
+msgstr "نظرات"
+
+#: .\templates\products\product_detail.html:97
+msgid "weight"
+msgstr "وزن"
+
+#: .\templates\products\product_detail.html:98
+msgid "grams"
+msgstr "گرم"
+
+#: .\templates\products\product_detail.html:101
+msgid "size"
+msgstr "سایز"
+
+#: .\templates\products\product_detail.html:107
+msgid "black"
+msgstr "مشکی"
+
+#: .\templates\products\product_detail.html:108
+msgid "green"
+msgstr "سبز"
+
+#: .\templates\products\product_detail.html:109
+msgid "red"
+msgstr "قرمز"
+
+#: .\templates\products\product_detail.html:110
+msgid "orange"
+msgstr "نارنجی"
+
+#: .\templates\products\product_detail.html:152
+msgid "Write your comment"
+msgstr "نظر خود را بنویسید"
+
+#: .\templates\products\product_detail.html:157
+msgid "submit"
+msgstr "ارسال"

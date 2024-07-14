@@ -1,6 +1,8 @@
 {% extends "_base.html" %}
 
 {% load static %}
+{% load i18n %}
+
 {% load crispy_forms_tags %}
 {% load comment_tags %}
 
@@ -17,7 +19,7 @@ Detail of {{ product }}
                 <div class="row">
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center flex-sm-row flex-column">
-                            <h1 class="page-title">جزئیات محصول «{{ product.title }}»</h1>
+                            <h1 class="page-title">{% trans "product detail" %} «{{ product.title }}»</h1>
                         </div>
                     </div>
                 </div>
@@ -51,15 +53,15 @@ Detail of {{ product }}
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-small btn-bg-red btn-color-white btn-hover-2" onclick="window.location.href='cart.html'">
-                                        اضافه به سبد خرید
+                                        {% trans "add to cart" %}
                                     </button>
                                 </div>
                                 <div class="product-footer-meta mt-5 pt-5">
-                                    <p><span class="m-0">دسته بندی ها:</span>
-                                        <a href="shop.html">لباس</a>,
-                                        <a href="shop.html">تابستانی</a>,
-                                        <a href="shop.html">گرم</a>,
-                                        <a href="shop.html">زنانه</a>
+                                    <p><span class="m-0">{% trans "categories" %}:</span>
+                                        <a href="shop.html">{% trans "cloth" %}</a>,
+                                        <a href="shop.html">{% trans "summer" %}</a>,
+                                        <a href="shop.html">{% trans "warm" %}</a>,
+                                        <a href="shop.html">{% trans "women" %}</a>
                                     </p>
                                 </div>
                             </div>
@@ -70,13 +72,13 @@ Detail of {{ product }}
                             <div class="product-data-tab tab-style-3">
                                 <div class="nav nav-tabs product-data-tab__head" id="product-tab" role="tablist">
                                     <a class="m-0 product-data-tab__link nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-selected="true">
-                                        <span>توضیحات محصول</span>
+                                        <span>{% trans "product description" %}</span>
                                     </a>
                                     <a class="m-0 product-data-tab__link nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-selected="true">
-                                        <span>ویژگی ها</span>
+                                        <span>{% trans "attributes" %}</span>
                                     </a>
                                     <a class="m-0 product-data-tab__link nav-link" id="nav-reviews-tab" data-toggle="tab" href="#nav-reviews" role="tab" aria-selected="true">
-                                        <span>نظرات ({{ product.comments.all|only_active_comments|length }})</span>
+                                        <span>{% trans "comments" %} ({{ product.comments.all|only_active_comments|length }})</span>
                                     </a>
                                 </div>
                                 <div class="tab-content product-data-tab__content" id="product-tabContent">
@@ -92,20 +94,20 @@ Detail of {{ product }}
                                             <table class="table shop_attributes">
                                                 <tbody>
                                                     <tr>
-                                                        <th>وزن</th>
-                                                        <td>۴۳۰ گرم</td>
+                                                        <th>{% trans "weight" %}</th>
+                                                        <td>۴۳۰ {% trans "grams" %}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>سایز</th>
+                                                        <th>{% trans "size" %}</th>
                                                         <td>XL</td>
                                                     </tr>
                                                     <tr>
                                                         <th>رنگ</th>
                                                         <td>
-                                                            <a href="shop-sidebar.html">مشکی</a>,
-                                                            <a href="shop-sidebar.html">سبز</a>,
-                                                            <a href="shop-sidebar.html">قرمز</a>,
-                                                            <a href="shop-sidebar.html">نارنجی</a>,
+                                                            <a href="shop-sidebar.html">{% trans "black" %}</a>,
+                                                            <a href="shop-sidebar.html">{% trans "green" %}</a>,
+                                                            <a href="shop-sidebar.html">{% trans "red" %}</a>,
+                                                            <a href="shop-sidebar.html">{% trans "orange" %}</a>,
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -147,12 +149,12 @@ Detail of {{ product }}
                                                 <div class="row">
                                                     <div class="border-top py-5 w-100"></div>
                                                     <div class="col-lg-8 m-auto">
-                                                        <span class="reply-title pull-right">نظر خود را بنویسید</span>
+                                                        <span class="reply-title pull-right">{% trans "Write your comment" %}</span>
                                                         <br>
                                                         <form action="{% url 'comment_create' product.id %}" method="post">
                                                             {% csrf_token %}
                                                             {{ comment_form|crispy}}
-                                                            <input type="submit" value="ارسال">
+                                                            <input type="submit" value="{% trans "submit" %}">
                                                         </form>
                                                     </div>
                                                 </div>

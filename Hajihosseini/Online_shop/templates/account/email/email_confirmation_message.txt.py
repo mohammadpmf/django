@@ -1,0 +1,13 @@
+BBBB BBBBBBB
+BBBBBBBBBBBB BBBB BB BBBBBBBBBBBB
+BBBB BBBB
+BBBBBBBBBB BBB
+ gettext(u'\nسلام %(user)s\nHello from %(site_name)s.\n\nIf you requested this email please click on the link below:\n%(activate_url)s \n\n') 
+SSSS SSSSSSSS
+SSSSS SSSS SSSSSSSSSSSSSS
+
+SS SSS SSSSSSSSS SSSS SSSSS SSSSSS SSSSS SS SSS SSSS SSSSSS
+SSSSSSSSSSSSSSSS 
+
+
+BBBBBBBBBBBBB
