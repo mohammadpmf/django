@@ -1,0 +1,9 @@
+پکیج جنگو آل آث
+داخل پوشه ای به اسم account
+دنبال لاگین و ساین آپ میگرده.
+به خاطر همین اسم پوشه رو از registration
+به account
+تغییر دادیم.
+
+لینک مراحل انجام کار
+https://docs.allauth.org/en/latest/installation/quickstart.html

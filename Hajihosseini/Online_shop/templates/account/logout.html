@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block page_tile %}
+Logout
+{% endblock page_tile %}
+
+{% block content %}
+<div class='container mt-5'>
+<h1>Log Out Page</h1>
+<h2>Are you sure you want to log out?</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class="btn btn-outline-danger m-2" value="yes">
+</form>
+</div>
+{% endblock content %}

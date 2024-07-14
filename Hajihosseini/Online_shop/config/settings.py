@@ -41,11 +41,16 @@ INSTALLED_APPS = [
     # Third party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'allauth',
+    'allauth.account',
 
-    # My apps
+
+    # Local apps
     'accounts',
     'pages',
 ]
+
+SITE_ID = 1 # حاجی حسینی گذاشته بود. اما تو لینکه نبود. گذاشتم اوکی بود دیگه حذفش نکردم.
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,6 +60,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -74,6 +82,24 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+########################     EMAIL     ########################
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = "shookooljooni254@gmail.com"
+EMAIL_HOST_PASSWORD = "dhbi felf qtxe bxgu"
+########################     END EMAIL     ########################
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -140,8 +166,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # accounts config
 AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'home'
 
 # crispy form config
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+
+
+# all auth config البته خیلی هاش وسط کدها بود. این تیکه رو جدا نوشتم
+# ACCOUNT_SESSION_REMEMBER = True # تیک ریممبر می رو به صورت پیش فرض فعال میذاره و دیگه به کاربر هم نشون نمیده.
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False # به صورت پیش فرض ترو هست و ۲ بار میپرسه. اگه فالسش کنیم یه بار میپرسه موقع ثبت نام
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_ATHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
