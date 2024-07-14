@@ -103,8 +103,14 @@ AUTHENTICATION_BACKENDS = [
 ########################     EMAIL     ########################
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
+# EMAIL_USE_SSL = True
+# EMAIL_PORT = 465 # SSL
+# However, SSL is an older technology that contains some security flaws.
+# Transport Layer Security (TLS) is the upgraded version of SSL that fixes existing SSL vulnerabilities.
+# TLS authenticates more efficiently and continues to support encrypted communication channels.
+# خلاصه این که اس اس ال یه مشکلاتی داشت و ورژن تی ال اس رو دادن که امن تره
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587 # TLS
 EMAIL_HOST_USER = env('MY_EMAIL_ADDRESS')
 EMAIL_HOST_PASSWORD = env('MY_APP_PASSWORD')
 ########################     END EMAIL     ########################
