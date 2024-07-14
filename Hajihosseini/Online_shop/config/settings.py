@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'allauth',
     'allauth.account',
-
+    'rosetta',
 
     # Local apps
     'accounts',
@@ -162,8 +162,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'fa'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'fa'
+
+# وقتی رزتا رو میذاریم همه زبان ها رو میاره. در حالی که نمیخوایم.
+# فقط چیزایی که میخوایم رو بهش میگیم. با این متغیر
+LANGUAGES = (
+    ('en', 'English'),
+    ('fa', 'Persian'),
+)
+
 
 TIME_ZONE = 'Asia/Tehran'
     
