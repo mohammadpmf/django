@@ -211,3 +211,11 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_ATHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+
+
+# برای تغییر دادن اسم خطا از ارور به دنجر که با رنگ بوت استرپ در بیاد و کد کمتری
+# بنویسیم تو اچ تی ام ال و ویومون
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

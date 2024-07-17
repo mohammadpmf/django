@@ -1,8 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+from django.contrib import messages
 
 from .forms import CommentForm
 from .models import Product, Comment
+
+
+def test(request):
+    messages.success(request, "با موفقیت ثبت شد")
+    messages.warning(request, "این یک هشدار است")
+    messages.error(request, "با خطا مواجه شد")
+    messages.info(request, message="یک پیغام برای اطلاع رسانی")
+    return render(request, 'test.html')
 
 
 class ProductListView(generic.ListView):
