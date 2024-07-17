@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-14 20:38+0330\n"
-"PO-Revision-Date: 2024-07-14 21:02+0330\n"
+"POT-Creation-Date: 2024-07-17 21:05+0330\n"
+"PO-Revision-Date: 2024-07-17 20:58+0330\n"
 "Last-Translator:   <mohammad.pfallah@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -50,74 +50,86 @@ msgstr "امتیاز به این محصول"
 msgid "product detail"
 msgstr "جزییات محصول"
 
-#: .\templates\products\product_detail.html:56
+#: .\templates\products\product_detail.html:57
 msgid "add to cart"
 msgstr "اضافه به سبد خرید"
 
-#: .\templates\products\product_detail.html:60
+#: .\templates\products\product_detail.html:63
 msgid "categories"
 msgstr "دسته بندی ها"
 
-#: .\templates\products\product_detail.html:61
+#: .\templates\products\product_detail.html:64
 msgid "cloth"
 msgstr "لباس"
 
-#: .\templates\products\product_detail.html:62
+#: .\templates\products\product_detail.html:65
 msgid "summer"
 msgstr "تابستانی"
 
-#: .\templates\products\product_detail.html:63
+#: .\templates\products\product_detail.html:66
 msgid "warm"
 msgstr "گرم"
 
-#: .\templates\products\product_detail.html:64
+#: .\templates\products\product_detail.html:67
 msgid "women"
 msgstr "زنانه"
 
-#: .\templates\products\product_detail.html:75
+#: .\templates\products\product_detail.html:78
 msgid "product description"
 msgstr "توضیحات محصول"
 
-#: .\templates\products\product_detail.html:78
+#: .\templates\products\product_detail.html:81
 msgid "attributes"
 msgstr "ویژگی ها"
 
-#: .\templates\products\product_detail.html:81
+#: .\templates\products\product_detail.html:84
 msgid "comments"
 msgstr "نظرات"
 
-#: .\templates\products\product_detail.html:97
+#: .\templates\products\product_detail.html:100
 msgid "weight"
 msgstr "وزن"
 
-#: .\templates\products\product_detail.html:98
+#: .\templates\products\product_detail.html:101
 msgid "grams"
 msgstr "گرم"
 
-#: .\templates\products\product_detail.html:101
+#: .\templates\products\product_detail.html:104
 msgid "size"
 msgstr "سایز"
 
-#: .\templates\products\product_detail.html:107
+#: .\templates\products\product_detail.html:110
 msgid "black"
 msgstr "مشکی"
 
-#: .\templates\products\product_detail.html:108
+#: .\templates\products\product_detail.html:111
 msgid "green"
 msgstr "سبز"
 
-#: .\templates\products\product_detail.html:109
+#: .\templates\products\product_detail.html:112
 msgid "red"
 msgstr "قرمز"
 
-#: .\templates\products\product_detail.html:110
+#: .\templates\products\product_detail.html:113
 msgid "orange"
 msgstr "نارنجی"
 
-#: .\templates\products\product_detail.html:152
+#: .\templates\products\product_detail.html:156
 msgid "Write your comment"
 msgstr "نظر خود را بنویسید"
 
-#: .\templates\products\product_detail.html:157
+#: .\templates\products\product_detail.html:161
 msgid "submit"
 msgstr "ارسال"
+
+#: .\templates\products\product_detail.html:165
+msgid "To write your comment please "
+msgstr "جهت نوشتن نظر خود لطفا"
+
+#: .\templates\products\product_detail.html:167
+msgid "Login"
+msgstr "وارد شوید"
+
+#: .\views.py:46
+msgid "Comment successfully created"
+msgstr "نظر شما با موفقیت ثبت شد."
