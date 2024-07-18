@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     # Third party apps
     'crispy_forms',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rosetta',
+    'jalali_date',
 
     # Local apps
     'accounts',
@@ -63,6 +65,7 @@ INSTALLED_APPS = [
     # داخل اپ، داخل فایل اپز.پای یه کلاس میسازه به اسم اپمون با یه کانفیگ تهش که میشه این
     # مدلی هم داخل استرینگ نوشت. نوشتم یه نمونه داشته باشم فقط
     'cart',
+    'persian_translate',
 ]
 
 SITE_ID = 1 # حاجی حسینی گذاشته بود. اما تو لینکه نبود. گذاشتم اوکی بود دیگه حذفش نکردم.
@@ -228,3 +231,8 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+
+# برای جداسازی ۳ رقمی اعداد با همین یه خط میشه این کار رو کرد. اما برای اعداد فارسی اعمال نمیشد
+# از هیومنایز استفاده کرد و منم مثل خودش پیش رفتم و این رو کامنت کردم که باشه.
+# USE_THOUSAND_SEPARATOR = True
