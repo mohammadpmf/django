@@ -1,0 +1,88 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-18 19:21+0330\n"
+"PO-Revision-Date: 2024-07-18 19:24+0330\n"
+"Last-Translator:   <mohammad.pfallah@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Translated-Using: django-rosetta 0.10.0\n"
+
+#: .\forms.py:13
+msgid ""
+"Please Enter any further notes if you have some. Otherwise leave theis field"
+" empty."
+msgstr ""
+"لطفا در صورت نیاز، یادداشت بگذارید. در غیر این صورت، این قسمت را خالی "
+"بگذارید."
+
+#: .\models.py:7
+msgid "User"
+msgstr "کاربر"
+
+#: .\models.py:8
+msgid "Is Paid?"
+msgstr "پرداخت شده؟"
+
+#: .\models.py:10
+msgid "First Name"
+msgstr "نام"
+
+#: .\models.py:11
+msgid "Last Name"
+msgstr "نام خانوادگی"
+
+#: .\models.py:12
+msgid "Phone Number"
+msgstr "شماره تماس"
+
+#: .\models.py:13
+msgid "Address"
+msgstr "آدرس"
+
+#: .\models.py:14
+#| msgid "Order"
+msgid "Order Notes"
+msgstr "یادداشت برای سفارش"
+
+#: .\models.py:15
+msgid "Date Time of creation"
+msgstr "زمان ایجاد"
+
+#: .\models.py:16
+msgid "Date Time of last edit"
+msgstr "زمان آخرین ویرایش"
+
+#: .\models.py:23 .\templates\orders\order_create.html:20
+msgid "Order"
+msgstr "ثبت سفارش"
+
+#: .\models.py:24
+msgid "Product"
+msgstr "محصول"
+
+#: .\models.py:25
+msgid "Quantity"
+msgstr "تعداد"
+
+#: .\models.py:26
+msgid "Price"
+msgstr "قیمت"
+
+#: .\templates\orders\order_create.html:10
+msgid "Payment"
+msgstr "پرداخت"
+
+#: .\templates\orders\order_create.html:91
+msgid "$"
+msgstr "تومان"
