@@ -39,7 +39,9 @@ Products List
                                                 <div class="product-inner">
                                                     <figure class="product-image">
                                                         <a href="{{ product.get_absolute_url }}">
-                                                            <img src="https://dkstatics-public.digikala.com/digikala-products/15d774761e234a15c1c559ac540963baad9e229f_1631704695.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90" alt="Products">
+                                                            {% if product.image %}
+                                                                <img src="{{ product.image.url }}" alt="Products">
+                                                            {% endif %}
                                                         </a>
                                                         <div class="ShoppingYar-product-action">
                                                             <div class="product-action d-flex">
@@ -67,33 +69,6 @@ Products List
                                             </div>
                                         </div>
                                         {% endfor %}
-                                        <div class="col-xl-3 col-md-4 col-sm-6 mb--50">
-                                            <div class="ShoppingYar-product">
-                                                <div class="product-inner">
-                                                    <figure class="product-image">
-                                                        <a href="product-details.html">
-                                                            <img src="https://dkstatics-public.digikala.com/digikala-products/4140472.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90" alt="Products">
-                                                        </a>
-                                                        <div class="ShoppingYar-product-action">
-                                                            <div class="product-action d-flex">
-                                                                <a href="wishlist.html" class="action-btn">
-                                                                    <i class="flaticon flaticon-like"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </figure>
-                                                    <div class="product-info">
-                                                        <h3 class="product-title mb--15">
-                                                            <a href="product-details.html">کلاه زمستانی طرف برف</a>
-                                                        </h3>
-                                                        <div class="product-price-wrapper mb--30">
-                                                            <span class="money">۱۳۸,۰۰۰ تومان</span>
-                                                        </div>
-                                                        <a href="cart.html" class="btn btn-small btn-bg-sand btn-color-dark px-3">اضافه کردن به سبد خرید</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

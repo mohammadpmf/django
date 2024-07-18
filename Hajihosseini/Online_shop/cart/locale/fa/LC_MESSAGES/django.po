@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-17 20:43+0330\n"
-"PO-Revision-Date: 2024-07-17 20:46+0330\n"
+"POT-Creation-Date: 2024-07-18 16:07+0330\n"
+"PO-Revision-Date: 2024-07-18 16:08+0330\n"
 "Last-Translator:   <mohammad.pfallah@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,10 +30,30 @@ msgstr "محصول با موفقیت به سبد خرید اضافه شد."
 msgid "Product successfully removed from cart"
 msgstr "محصول با موفقیت از سبد خرید شما حذف شد."
 
-#: .\templates\cart\cart_detail.html:89
+#: .\templates\cart\cart_detail.html:15 .\templates\cart\cart_sidebar.html:10
+msgid "Cart"
+msgstr "سبد خرید"
+
+#: .\templates\cart\cart_detail.html:79
 msgid "Cart is Empty! Add some items!"
 msgstr "سبد خرید شما خالیست. تعدادی کالا به سبد خرید اضافه کنید."
 
-#: .\templates\cart\cart_detail.html:90
+#: .\templates\cart\cart_detail.html:80
 msgid "Go shopping"
 msgstr "رفتن به فروشگاه."
+
+#: .\templates\cart\cart_sidebar.html:28 .\templates\cart\cart_sidebar.html:36
+msgid "$"
+msgstr "تومان"
+
+#: .\templates\cart\cart_sidebar.html:35
+msgid "total"
+msgstr "جمع کل"
+
+#: .\templates\cart\cart_sidebar.html:39
+msgid "Go to Cart"
+msgstr "برو به سبد خرید"
+
+#: .\templates\cart\cart_sidebar.html:40
+msgid "Checkout"
+msgstr ""
