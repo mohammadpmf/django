@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'cart',
     'persian_translate',
     'orders',
+    'payment',
 ]
 
 SITE_ID = 1 # حاجی حسینی گذاشته بود. اما تو لینکه نبود. گذاشتم اوکی بود دیگه حذفش نکردم.

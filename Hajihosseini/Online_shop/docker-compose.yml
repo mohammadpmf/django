@@ -11,10 +11,10 @@ services:
     depends_on:
       - db
     environment:
-      - "DJANGO_SECRET_KEY=django-insecure-b764$$#(&o4o((cvy!z^nsseq5@erq#e^0%5r5a(%c24*f^*sde"
-      - "MY_EMAIL_ADDRESS=shookooljooni254@gmail.com"
-      - "MY_APP_PASSWORD=dhbifelfqtxebxgu"
-      - "DJANGO_DEBUG=True"
+      - "DJANGO_SECRET_KEY=${DOCKER_COMPOSE_DJANGO_SECRET_KEY}"
+      - "MY_EMAIL_ADDRESS=${DOCKER_COMPOSE_DJANGO_EMAIL}"
+      - "MY_APP_PASSWORD=${DOCKER_COMPOSE_DJANGO_APP_PASSWORD}"
+      - "DJANGO_DEBUG=${DOCKER_COMPOSE_DJANGO_DEBUG}"
 
   db:
     image: postgres:16
