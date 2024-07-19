@@ -43,7 +43,7 @@ Cart Detail
                                                 <tr>
                                                     <td class="product-remove text-left"><form action="{% url 'cart:cart_remove' item.product_obj.id %}" method="post">{% csrf_token %}<button class="btn small" type="submit"><i class="flaticon flaticon-cross"></i></button></form></td>
                                                     <td class="product-thumbnail text-left">
-                                                        <img src="assets/img/products/prod-10-70x88.jpg" alt="">
+                                                        <img src="{{ item.product_obj.image.url }}" alt="">
                                                     </td>
                                                     <td class="product-name">
                                                         <h3>
@@ -82,11 +82,16 @@ Cart Detail
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="row no-gutters border-top pt--20 mt--20">
-                                <div class="col-sm-6 text-sm-right">
-                                    <button type="submit" class="cart-form__btn">خالی کردن سبد خرید</button>
+                            {% if not cart.is_empty %}
+                                <div class="row no-gutters border-top pt--20 mt--20">
+                                    <div class="col-sm-6 text-sm-right">
+                                        <form action="{% url 'cart:cart_clear' %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="cart-form__btn">{% trans "Empty Cart" %}</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                         <div class="col-lg-4">
                             <div class="cart-collaterals">
@@ -105,8 +110,8 @@ Cart Detail
                                         </div>
                                     </div>
                                 </div>
-                                <a href="checkout.html" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">
-                                    ثبت سفارش
+                                <a href="{% url 'order_create' %}" class="btn btn-fullwidth btn-bg-red btn-color-white btn-hover-2">
+                                    {% trans "checkout" %}
                                 </a>
                             </div>
                         </div>

@@ -66,7 +66,16 @@ Products List
                                                                 <span class="money text-danger">{{ product.price|intcomma|translate_number }} {% trans "$" %}</span>
                                                             </span>
                                                         </div>
-                                                        <a href="cart.html" class="btn btn-small btn-bg-sand btn-color-dark px-3">اضافه کردن به سبد خرید</a>
+                                                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                                            {% csrf_token %}
+                                                            <div class="quantity-wrapper">
+                                                                <input type="hidden" class="quantity-input" name="quantity" id="qty" value="1">
+                                                                <button type="submit" class="btn btn-small btn-bg-red btn-color-white btn-hover-2" onclick="window.location.href='cart.html'">
+                                                                    {% trans "add to cart" %}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        {% comment %} <a href="cart.html" class="btn btn-small btn-bg-sand btn-color-dark px-3">اضافه کردن به سبد خرید</a> {% endcomment %}
                                                     </div>
                                                 </div>
                                             </div>
