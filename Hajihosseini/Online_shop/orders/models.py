@@ -15,6 +15,8 @@ class Order(models.Model):
     order_notes = models.TextField(max_length=700, blank=True, verbose_name=_('Order Notes'))
 
     zarinpal_authority = models.CharField(max_length=255, blank=True) # این رو برای ذخیره کد پیگیری زرین پال تعریف کردیم.
+    zarinpal_ref_id = models.CharField(max_length=255, blank=True) # این رو برای ذخیره کد پیگیری زرین پال تعریف کردیم.
+    zarinpal_data = models.TextField(blank=True)
     
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date Time of creation'))
     datetime_modified = models.DateTimeField(auto_now=True, verbose_name=_('Date Time of last edit'))
