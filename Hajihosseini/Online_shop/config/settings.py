@@ -248,3 +248,7 @@ MESSAGE_TAGS = {
 # برای جداسازی ۳ رقمی اعداد با همین یه خط میشه این کار رو کرد. اما برای اعداد فارسی اعمال نمیشد
 # از هیومنایز استفاده کرد و منم مثل خودش پیش رفتم و این رو کامنت کردم که باشه.
 # USE_THOUSAND_SEPARATOR = True
+
+
+
+ZARINPAL_MERCHANT_ID = env('DJANGO_ZARINPAL_MERCHANT_ID')
