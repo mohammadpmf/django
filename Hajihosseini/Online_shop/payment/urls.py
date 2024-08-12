@@ -10,6 +10,6 @@ urlpatterns = [
     path('callback/', views.payment_callback_sandbox, name='payment_callback'),
 
     # Zarinpal links
-    path('request/', views.send_request, name='request'),
-    path('verify/', views.verify , name='verify'),
+    # path('request/', views.send_request, name='request'),
+    # path('verify/', views.verify , name='verify'),
 ]
